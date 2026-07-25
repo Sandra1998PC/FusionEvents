@@ -42,7 +42,7 @@ function App() {
         <Route path="/organizer/:id/profile" element={<OrganizerProfile />} />
         <Route path="/admin/:id/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/:id/usermanagement" element={<AdminTables />} />
-        <Route path="/admin/:id/organizermanagement" element={<AdminOrganizer />} />
+        <Route path="/admin/:id/eventmanagement" element={<AdminOrganizer />} />
         <Route path="/admin/:id/notifications" element={<AdminNotifications />} />
          <Route path="/admin/:id/profile" element={<AdminProfile />} />
       </Routes>

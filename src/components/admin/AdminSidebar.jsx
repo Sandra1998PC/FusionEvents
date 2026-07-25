@@ -24,9 +24,9 @@ const menuItems = [
     path: "/admin/:id/usermanagement",
   },
   {
-    name: "Manage Organizer",
+    name: "Manage Events",
     icon: Users2,
-    path: "/admin/:id/organizermanagement",
+    path: "/admin/:id/eventmanagement",
   },
   {
     name: "Notifications",
