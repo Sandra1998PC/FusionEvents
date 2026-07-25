@@ -1,7 +1,7 @@
 import { Calendar, Clock3, ImagePlus, Images, MapPin } from "lucide-react";
 import { useState } from "react";
-import OrganizerSidebar from "../components/Organizer/OrganizerSidebar";
-import OrganizerHeader from "../components/Organizer/OrganizerHeader";
+import OrganizerSidebar from "../components/organizer/OrganizerSidebar";
+import OrganizerHeader from "../components/organizer/OrganizerHeader";
 
 export default function CreateEvent() {
     const [banner, setBanner] = useState(null);
