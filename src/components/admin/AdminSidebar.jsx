@@ -41,58 +41,77 @@ const menuItems = [
 ];
 
 function AdminSidebar() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   return (
-     <aside className="fixed left-0 top-0 h-screen w-72 bg-slate-900 border-r border-white/10">
+    <aside className="fixed left-0 top-0 h-screen w-72 bg-slate-900 border-r border-white/10">
 
-            <div className="p-8">
+      <div className="p-8">
 
-                <h1 className="text-3xl font-bold text-cyan-400">
+        <h1 className="text-3xl font-bold">
 
-                    Fusion Events
+          <span className="text-cyan-400">
+            Fusion
+          </span>
 
-                </h1>
+          <span className="text-violet-500">
+            Events
+          </span>
 
-                <p className="text-slate-400 mt-2">
+        </h1>
 
-                    Admin Panel
+        <p className="text-slate-400 mt-2">
 
-                </p>
+          Admin Panel
 
-            </div>
+        </p>
 
-            <nav className="px-4 mt-8">
+      </div>
 
-                {
+      <nav className="px-4 mt-8">
 
-                    menuItems.map((menu, index) => {
+        {
 
-                        const Icon = menu.icon;
+          menuItems.map((menu, index) => {
 
-                        return (
+            const Icon = menu.icon;
 
-                            <button
-                                key={index}
-                                onClick={() => navigate(menu.path)}
-                                className="w-full flex items-center gap-4 px-5 py-4 rounded-xl mb-3
+            return (
+
+              <button
+                key={index}
+                onClick={() => navigate(menu.path)}
+                className="w-full flex items-center gap-4 px-5 py-4 rounded-xl mb-3
                                 text-slate-300 hover:bg-cyan-400 hover:text-slate-900 transition"
-                                >
+              >
 
-                                <Icon size={22} />
+                <Icon size={22} />
 
-                                {menu.name}
+                {menu.name}
 
-                            </button>
+              </button>
 
-                        );
+            );
 
-                    })
+          })
 
-                }
+        }
 
-            </nav>
+      </nav>
 
-        </aside>
+       {/* Logout */}
+
+      <div className="p-5 border-t border-white/10 absolute bottom-0 left-10">
+
+        <button className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white transition duration-300">
+
+          <LogOut size={20} />
+
+          Logout
+
+        </button>
+
+      </div>
+    </aside>
   )
 }
 

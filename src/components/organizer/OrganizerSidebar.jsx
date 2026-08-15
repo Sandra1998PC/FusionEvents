@@ -7,7 +7,8 @@ import {
     FileBarChart2,
     Settings,
     Bell,
-    User
+    User,
+    LogOut
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -77,9 +78,15 @@ export default function OrganizerSidebar() {
 
             <div className="p-8">
 
-                <h1 className="text-3xl font-bold text-cyan-400">
+                <h1 className="text-3xl font-bold">
 
-                    Fusion Events
+                    <span className="text-cyan-400">
+                        Fusion
+                    </span>
+
+                    <span className="text-violet-500">
+                        Events
+                    </span>
 
                 </h1>
 
@@ -106,7 +113,7 @@ export default function OrganizerSidebar() {
                                 onClick={() => navigate(menu.path)}
                                 className="w-full flex items-center gap-4 px-5 py-4 rounded-xl mb-3
                                 text-slate-300 hover:bg-cyan-400 hover:text-slate-900 transition"
-                                >
+                            >
 
                                 <Icon size={22} />
 
@@ -121,6 +128,20 @@ export default function OrganizerSidebar() {
                 }
 
             </nav>
+
+            {/* Logout */}
+
+            <div className="p-5 border-t border-white/10  absolute bottom-0 left-10">
+
+                <button className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white transition duration-300">
+
+                    <LogOut size={20} />
+
+                    Logout
+
+                </button>
+
+            </div>
 
         </aside>
 

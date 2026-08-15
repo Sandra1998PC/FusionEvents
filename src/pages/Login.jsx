@@ -1,9 +1,49 @@
 import { Mail, Lock, Eye, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import loginBg from '../assets/loginBg.png'
+import { useState } from "react";
+import { loginAPI } from "../components/services/allAPIs";
+import Swal from "sweetalert2";
 
 const Login = () => {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
+  const [loginData, setLoginData] = useState({ email: "", password: "" })
+  const [error, setError] = useState(false);
+  console.log(loginData);
+
+
+  const login = async (e) => {
+    e.preventDefault();
+    if (!loginData?.email || !loginData?.password) {
+      setError(true)
+      return
+    }
+    const result = await loginAPI(loginData)
+    console.log(result)
+    if (result.status == 200) {
+      Swal.fire({
+        title: "LogIn Successfull !!!",
+        icon: "success"
+      });
+      sessionStorage.setItem("user", JSON.stringify(result.data.existingUser))
+      sessionStorage.setItem("token", result.data.token)
+      if (result.data.existingUser.role == "Participant") {
+        navigate(`/users/${result.data.existingUser._Id}/dashboard`)
+      }
+      else if (result.data.existingUser.role == "Organizer") {
+        navigate(`/organizer/${result.data.existingUser._Id}/dashboard`)
+      }
+      else if (result.data.existingUser.role == "Admin") {
+        navigate(`/admin/${result.data.existingUser._Id}/dashboard`)
+      }
+    }
+    else {
+      Swal.fire({
+        title: "Something went Wrong !!!",
+        icon: "error"
+      });
+    }
+  }
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
 
@@ -12,7 +52,7 @@ const Login = () => {
       <div className="absolute inset-0">
 
         <img
-          src = {loginBg}
+          src={loginBg}
           alt="Event Background"
           className="w-full h-full object-cover"
         />
@@ -69,7 +109,7 @@ const Login = () => {
 
           {/* Form */}
 
-          <form className="mt-10 space-y-6">
+          <form className="mt-10 space-y-6" onSubmit={login}>
 
             {/* Email */}
 
@@ -83,6 +123,13 @@ const Login = () => {
               <input
                 type="email"
                 placeholder="Email Address"
+                value={loginData.email}
+                onChange={(e) =>
+                  setLoginData({
+                    ...loginData,
+                    email: e.target.value
+                  })
+                }
                 className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:border-cyan-400 outline-none transition"
               />
 
@@ -100,6 +147,13 @@ const Login = () => {
               <input
                 type="password"
                 placeholder="Password"
+                value={loginData.password}
+                onChange={(e) =>
+                  setLoginData({
+                    ...loginData,
+                    password: e.target.value
+                  })
+                }
                 className="w-full pl-12 pr-12 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:border-cyan-400 outline-none transition"
               />
 
@@ -108,6 +162,14 @@ const Login = () => {
                 size={20}
               />
 
+            </div>
+
+            <div>
+              {error && (
+                <p className="mt-3 text-yellow-600 text-sm text-center">
+                  Password and confirm password must be same
+                </p>
+              )}
             </div>
 
             {/* Remember */}
@@ -136,7 +198,9 @@ const Login = () => {
 
             {/* Login */}
 
-            <button className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold flex justify-center items-center gap-2 hover:scale-105 transition duration-300 shadow-[0_0_30px_rgba(34,211,238,.45)]">
+            <button className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold flex justify-center 
+            items-center gap-2 hover:scale-105 transition duration-300 shadow-[0_0_30px_rgba(34,211,238,.45)]"
+             type="submit">
 
               Login
 

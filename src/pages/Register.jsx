@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   User,
   Mail,
@@ -9,6 +9,8 @@ import {
 } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import regBg from "../assets/RegBg.png"
+import { registerAPI } from "../components/services/allAPIs";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -21,6 +23,7 @@ const Register = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [passwordMatchError, setPasswordMatchError] = useState(false)
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -92,14 +95,41 @@ const Register = () => {
     return Object.keys(error).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validate()) {
-      console.log(form);
-      alert("Registration Successful");
+      console.log({
+        username: form.fullName, email: form.email,
+        phonenumber: form.phone, password: form.password, role: form.role
+      });
+      const result = await registerAPI({
+        username: form.fullName, email: form.email,
+        phonenumber: form.phone, password: form.password, role: form.role
+      })
+      console.log(result)
+      if (result.status == 201) {
+        Swal.fire({
+          title: "Registered Successfully !!!",
+          icon: "success"
+        });
+      }
+      else {
+        Swal.fire({
+          title: "Something Went Wrong !!!",
+          icon: "error"
+        });
+      }
     }
   };
+
+  useEffect(() => {
+    if (!form?.password || !form.confirmPassword) {
+      setPasswordMatchError(false);
+      return;
+    }
+    setPasswordMatchError(form.password !== form.confirmPassword);
+  }, [form.password, form.confirmPassword]);
 
   return (
     <section className="relative min-h-screen flex justify-center items-center overflow-hidden">
@@ -224,6 +254,13 @@ const Register = () => {
 
             {/* Role */}
 
+            {passwordMatchError && (
+                  <p className="mt-3 text-yellow-600 text-sm text-center">
+                    Password and confirm password must be same
+                  </p>
+                )}
+
+
             <div>
 
               <label className="text-white mb-3 block">
@@ -237,11 +274,10 @@ const Register = () => {
 
                     <label
                       key={role}
-                      className={`cursor-pointer py-4 rounded-xl border text-center transition ${
-                        form.role === role
-                          ? "border-cyan-400 bg-cyan-400/10 text-cyan-400"
-                          : "border-white/10 text-slate-300"
-                      }`}
+                      className={`cursor-pointer py-4 rounded-xl border text-center transition ${form.role === role
+                        ? "border-cyan-400 bg-cyan-400/10 text-cyan-400"
+                        : "border-white/10 text-slate-300"
+                        }`}
                     >
 
                       <input
