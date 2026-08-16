@@ -27,3 +27,8 @@ export const updateOrganizerAPI = async(reqBody) => {
 export const updateAdminAPI = async(reqBody) => {
     return await commonAPI("PUT",`/admin/profileupdate`,reqBody)
 }
+
+// add Events
+export const addEventAPI = async(reqBody) => {
+    return await commonAPI("POST",'/addEvent',reqBody)
+}

@@ -121,18 +121,32 @@ function Profile() {
             reqBody.append("profileImage", profileImage);
         }
 
-        const result = await updateParticipantAPI(reqBody);
+        try {
+            const result = await updateParticipantAPI(reqBody);
 
-        if (result.status === 200) {
+            if (result.status === 200) {
+                Swal.fire({
+                    title: "Profile Updated Successfully !!!",
+                    icon: "success"
+                });
+
+                setTimeout(() => {
+                    sessionStorage.clear();
+                    navigate("/login");
+                }, 2500);
+            }
+            else {
+                Swal.fire({
+                    title: "Something Went Wrong !!!",
+                    icon: "error"
+                });
+            }
+        }
+        catch (error) {
             Swal.fire({
-                title: "Profile Updated Successfully !!!",
-                icon: "success"
+                title: "Something Went Wrong !!!",
+                icon: "error"
             });
-
-            setTimeout(() => {
-                sessionStorage.clear();
-                navigate("/login");
-            }, 2500);
         }
     };
 
