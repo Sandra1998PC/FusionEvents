@@ -7,7 +7,7 @@ import {
   User,
   LogOut,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const menuItems = [
   {
@@ -43,6 +43,12 @@ const menuItems = [
 ];
 
 const Sidebar = () => {
+  const navigate = useNavigate()
+
+  const logOut = () => {
+    sessionStorage.clear()
+    navigate("/login")
+  }
   return (
     <aside className="w-72 h-screen sticky top-0 bg-slate-950/90 backdrop-blur-xl border-r border-cyan-500/20 flex flex-col">
 
@@ -81,10 +87,9 @@ const Sidebar = () => {
                 to={item.path}
                 className={({ isActive }) =>
                   `group flex items-center gap-4 px-5 py-4 rounded-2xl transition-all duration-300
-                  ${
-                    isActive
-                      ? "bg-cyan-400/10 border border-cyan-400 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,.35)]"
-                      : "text-slate-300 hover:bg-white/5 hover:border hover:border-violet-500/40 hover:text-white hover:shadow-[0_0_25px_rgba(124,58,237,.25)]"
+                  ${isActive
+                    ? "bg-cyan-400/10 border border-cyan-400 text-cyan-400 shadow-[0_0_20px_rgba(34,211,238,.35)]"
+                    : "text-slate-300 hover:bg-white/5 hover:border hover:border-violet-500/40 hover:text-white hover:shadow-[0_0_25px_rgba(124,58,237,.25)]"
                   }`
                 }
               >
@@ -112,7 +117,9 @@ const Sidebar = () => {
 
       <div className="p-5 border-t border-white/10">
 
-        <button className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white transition duration-300">
+        <button className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-red-500/40 
+        text-red-400 hover:bg-red-500 hover:text-white transition duration-300"
+        onClick={logOut}>
 
           <LogOut size={20} />
 

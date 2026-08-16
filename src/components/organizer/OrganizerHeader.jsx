@@ -3,8 +3,16 @@ import {
     Search,
     UserCircle
 } from "lucide-react";
+import { useEffect, useState } from "react";
+import axiosInstance from "../services/axiosInstance";
 
 export default function OrganizerHeader() {
+    const [organizerData,setOrganizerData] = useState({})
+      useEffect(() => {
+        const data = JSON.parse(sessionStorage.getItem("user"))
+        console.log("data : ",data)
+        setOrganizerData(data)
+      },[])
 
     return (
 
@@ -20,7 +28,7 @@ export default function OrganizerHeader() {
 
                 <p className="text-slate-400">
 
-                    Welcome back, Organizer 👋
+                    Welcome back, {organizerData.username} 👋
 
                 </p>
 
@@ -28,7 +36,7 @@ export default function OrganizerHeader() {
 
             <div className="flex items-center gap-5">
 
-                <div className="relative">
+                {/* <div className="relative">
 
                     <Search
                         className="absolute left-4 top-3 text-slate-400"
@@ -43,7 +51,7 @@ export default function OrganizerHeader() {
                         focus:border-cyan-400"
                     />
 
-                </div>
+                </div> */}
 
                 <button className="w-48 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white">
 
@@ -52,10 +60,11 @@ export default function OrganizerHeader() {
 
                 </button>
 
-                <UserCircle
-                    className="text-cyan-400"
-                    size={40}
-                />
+                <img
+          src= {organizerData?.profileImage != "" ? `${axiosInstance.defaults.baseURL}/uploads/${organizerData?.profileImage}` : "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png"}
+          alt="Profile"
+          className="w-24 h-24 rounded-full border-4 border-cyan-400 object-cover"
+        />
 
             </div>
 

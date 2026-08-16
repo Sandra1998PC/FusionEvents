@@ -5,8 +5,16 @@ import {
 } from "lucide-react";
 import { BsBellFill } from "react-icons/bs";
 import profile from "../../assets/ProfileImg.avif";
+import { useEffect, useState } from "react";
+import axiosInstance from "../services/axiosInstance";
 
 const TopBar = () => {
+  const [participantData,setParticipantData] = useState({})
+  useEffect(() => {
+    const data = JSON.parse(sessionStorage.getItem("user"))
+    console.log("data : ",data)
+    setParticipantData(data)
+  },[])
   return (
     <header className="sticky top-0 z-40 h-20 bg-slate-950/80 backdrop-blur-xl border-b border-cyan-500/20">
 
@@ -56,7 +64,8 @@ const TopBar = () => {
           <button className="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-3 py-2 hover:border-violet-500 hover:shadow-[0_0_20px_rgba(124,58,237,.35)] transition">
 
             <img
-              src= {profile}
+              src= {participantData?.profileImage != "" ? `${axiosInstance.defaults.baseURL}/uploads/${participantData?.profileImage}` : "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png"}
+              // src = "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png"
               alt="Profile"
               className="w-11 h-11 rounded-full border-2 border-cyan-400 object-cover"
             />
@@ -64,7 +73,7 @@ const TopBar = () => {
             <div className="hidden md:block text-left">
 
               <h4 className="text-white font-semibold">
-                Sandra
+                {participantData.username}
               </h4>
 
               <p className="text-slate-400 text-sm">
@@ -73,10 +82,10 @@ const TopBar = () => {
 
             </div>
 
-            <ChevronDown
+            {/* <ChevronDown
               size={18}
               className="text-slate-400"
-            />
+            /> */}
 
           </button>
 

@@ -11,3 +11,19 @@ export const registerAPI = async(reqBody) => {
 export const loginAPI = async(reqBody) => {
     return await commonAPI("POST",'/login',reqBody)
 }
+
+
+// update participant
+export const updateParticipantAPI = async(reqBody) => {
+    return await commonAPI("PUT",`/participant/profileupdate`,reqBody)
+}
+
+// update Organizer
+export const updateOrganizerAPI = async(reqBody) => {
+    return await commonAPI("PUT",`/organizer/profileupdate`,reqBody)
+}
+
+// update Admin
+export const updateAdminAPI = async(reqBody) => {
+    return await commonAPI("PUT",`/admin/profileupdate`,reqBody)
+}

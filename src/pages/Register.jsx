@@ -113,6 +113,14 @@ const Register = () => {
           title: "Registered Successfully !!!",
           icon: "success"
         });
+        setForm({
+          fullName: "",
+          email: "",
+          phone: "",
+          password: "",
+          confirmPassword: "",
+          role: "Participant",
+        })
       }
       else {
         Swal.fire({
@@ -255,10 +263,10 @@ const Register = () => {
             {/* Role */}
 
             {passwordMatchError && (
-                  <p className="mt-3 text-yellow-600 text-sm text-center">
-                    Password and confirm password must be same
-                  </p>
-                )}
+              <p className="mt-3 text-yellow-600 text-sm text-center">
+                Password and confirm password must be same
+              </p>
+            )}
 
 
             <div>

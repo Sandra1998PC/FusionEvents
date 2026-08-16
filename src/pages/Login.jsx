@@ -18,7 +18,7 @@ const Login = () => {
       setError(true)
       return
     }
-    const result = await loginAPI(loginData)
+    try{const result = await loginAPI(loginData)
     console.log(result)
     if (result.status == 200) {
       Swal.fire({
@@ -28,17 +28,24 @@ const Login = () => {
       sessionStorage.setItem("user", JSON.stringify(result.data.existingUser))
       sessionStorage.setItem("token", result.data.token)
       if (result.data.existingUser.role == "Participant") {
-        navigate(`/users/${result.data.existingUser._Id}/dashboard`)
+        navigate(`/users/${result.data.existingUser._id}/dashboard`)
       }
       else if (result.data.existingUser.role == "Organizer") {
-        navigate(`/organizer/${result.data.existingUser._Id}/dashboard`)
+        navigate(`/organizer/${result.data.existingUser._id}/dashboard`)
       }
       else if (result.data.existingUser.role == "Admin") {
-        navigate(`/admin/${result.data.existingUser._Id}/dashboard`)
+        navigate(`/admin/${result.data.existingUser._id}/dashboard`)
       }
     }
     else {
       Swal.fire({
+        title: "Something went Wrong !!!",
+        icon: "error"
+      });
+    }}
+    catch(error){
+      console.log(error)
+       Swal.fire({
         title: "Something went Wrong !!!",
         icon: "error"
       });

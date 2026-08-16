@@ -20,6 +20,7 @@ import AdminOrganizer from './components/admin/AdminOrganizer';
 import AdminNotifications from './components/admin/AdminNotifications';
 import AdminProfile from './components/admin/AdminProfile';
 import OrganizerProfile from './components/organizer/OrganizerProfile';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="/users/:id/events/details" element={<EventDetails />} />
         <Route path="/users/:id/tickets" element={<Ticket />} />
         <Route path="/users/:id/profile" element={<UserProfile />} />
+        <Route path="/users/:id/editprofile" element={<Profile />} />
         <Route path="/users/:id/notifications" element={<UserNotifications />} />
         <Route path="/organizer/:id/dashboard" element={<OrganizerDashboard />} />
         <Route path="/organizer/:id/manageevents" element={<ManageEventsTable />} />

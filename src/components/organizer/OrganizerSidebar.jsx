@@ -72,6 +72,11 @@ export default function OrganizerSidebar() {
 
     const navigate = useNavigate()
 
+    const logOut = () => {
+        sessionStorage.clear()
+        navigate("/login")
+    }
+
     return (
 
         <aside className="fixed left-0 top-0 h-screen w-72 bg-slate-900 border-r border-white/10">
@@ -133,7 +138,8 @@ export default function OrganizerSidebar() {
 
             <div className="p-5 border-t border-white/10  absolute bottom-0 left-10">
 
-                <button className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white transition duration-300">
+                <button className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl border border-red-500/40
+                 text-red-400 hover:bg-red-500 hover:text-white transition duration-300" onClick={logOut}>
 
                     <LogOut size={20} />
 

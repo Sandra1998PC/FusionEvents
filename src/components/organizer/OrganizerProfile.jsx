@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
     Camera,
     Mail,
@@ -15,25 +15,23 @@ import {
     Save,
     Lock,
     ShieldCheck,
+    User,
 } from "lucide-react";
 import { FaFacebookSquare, FaLinkedin, FaTwitterSquare } from "react-icons/fa";
 import { FaSquareInstagram } from "react-icons/fa6";
 import OrganizerSidebar from "./OrganizerSidebar";
 import OrganizerHeader from "./OrganizerHeader";
+import axiosInstance from "../services/axiosInstance";
+import { useNavigate } from "react-router-dom";
+import { updateOrganizerAPI } from "../services/allAPIs";
+import Swal from "sweetalert2";
 
 export default function OrganizerProfile() {
-    const [profile, setProfile] = useState({
-        name: "John Anderson",
-        email: "john@fusionevents.com",
-        phone: "+91 9876543210",
-        organization: "Fusion Events Pvt Ltd",
-        location: "Bangalore, India",
-        website: "www.fusionevents.com",
-        bio: "Professional event organizer with experience in technology, business, and entertainment events.",
-        facebook: "",
-        instagram: "",
-        linkedin: "",
-    });
+    const [profile, setProfile] = useState({})
+    const [preview, setPreview] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+    const [passwordMatchError, setPasswordMatchError] = useState(false)
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         setProfile({
@@ -41,6 +39,113 @@ export default function OrganizerProfile() {
             [e.target.name]: e.target.value,
         });
     };
+
+    useEffect(() => {
+        const data = JSON.parse(sessionStorage.getItem("user"))
+        console.log("data : ", data)
+        setProfile(data)
+        setConfirmPassword(data.password)
+    }, [])
+
+    const handleFileUpload = (e) => {
+        const imageFile = e.target.files[0];
+        if (imageFile.type.startsWith("image/")) {
+            setProfile({ ...profile, profileImage: imageFile })
+            const imageURL = URL.createObjectURL(imageFile)
+            console.log(imageURL);
+            setPreview(imageURL)
+        }
+    }
+
+    const handleUpdate = async () => {
+        console.log("inside handle update")
+        const {
+            username,
+            email,
+            phonenumber,
+            password,
+            location,
+            website,
+            bio,
+            profileImage
+        } = profile;
+
+        if (
+            !username ||
+            !email ||
+            !phonenumber ||
+            !password ||
+            !location ||
+            !website ||
+            !bio
+        ) {
+            Swal.fire({
+                title: "Please Fill the form Completely!!!",
+                icon: "error"
+            });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                title: "Passwords do not match!",
+                icon: "error"
+            });
+            return;
+        }
+
+        const reqBody = new FormData();
+
+        reqBody.append("username", username);
+        reqBody.append("email", email);
+        reqBody.append("phonenumber", phonenumber);
+        reqBody.append("password", password);
+        reqBody.append("location", location);
+        reqBody.append("website", website);
+        reqBody.append("bio", bio);
+
+        if (profileImage instanceof File) {
+            reqBody.append("profileImage", profileImage);
+        }
+
+        try {
+            const result = await updateOrganizerAPI(reqBody);
+            console.log("result : ",result);
+            
+            if (result.status === 200) {
+                Swal.fire({
+                    title: "Profile Updated Successfully !!!",
+                    icon: "success"
+                });
+
+                setTimeout(() => {
+                    sessionStorage.clear();
+                    navigate("/login");
+                }, 2500);
+            }
+            else {
+                Swal.fire({
+                    title: "Something went Wrong !!!",
+                    icon: "error"
+                });
+            }
+        }
+        catch (error) {
+            console
+            Swal.fire({
+                title: "Something went Wrong !!!",
+                icon: "error"
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (!profile?.password || !confirmPassword) {
+            setPasswordMatchError(false);
+            return;
+        }
+        setPasswordMatchError(profile.password !== confirmPassword);
+    }, [profile.password, confirmPassword]);
 
     return (
         <div className="flex bg-slate-950 min-h-screen">
@@ -63,7 +168,7 @@ export default function OrganizerProfile() {
                             </h1>
 
                             <p className="text-slate-400 mt-2">
-                                Manage your personal information and organization details.
+                                Manage your personal information.
                             </p>
                         </div>
 
@@ -76,23 +181,44 @@ export default function OrganizerProfile() {
                                 <div className="flex flex-col items-center">
 
                                     <div className="relative">
+                                        <label htmlFor="userProfile" className="relative block  cursor-pointer relative">
+                                            <input type="file" id="userProfile" hidden accept="image/*"
+                                                onChange={(e) => handleFileUpload(e)} />
 
-                                        <img
-                                            src="https://i.pravatar.cc/200"
-                                            alt="Profile"
-                                            className="w-36 h-36 rounded-full border-4 border-cyan-400 object-cover"
-                                        />
+                                            {profile?.profileImage ? (
+                                                <img
+                                                    src={
+                                                        preview
+                                                            ? preview
+                                                            : profile.profileImage.startsWith(
+                                                                "https://lh3.googleusercontent.com"
+                                                            )
+                                                                ? profile.profileImage
+                                                                : `${axiosInstance.defaults.baseURL}/uploads/${profile.profileImage}`
+                                                    }
+                                                    alt="user"
+                                                    className="w-24 h-24 md:w-28 md:h-28 rounded-full border border-gray-300 object-cover"
+                                                />
+                                            ) : (
+                                                <img
+                                                    src={
+                                                        preview ||
+                                                        "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png"
+                                                    }
+                                                    alt="user"
+                                                    className="w-24 h-24 md:w-28 md:h-28 rounded-full border border-gray-300 object-cover"
+                                                />
+                                            )}
 
-                                        <button
-                                            className="absolute bottom-2 right-2
-                w-10 h-10 rounded-full
-                bg-cyan-500
-                text-black
-                flex items-center justify-center
-                hover:scale-110 transition"
-                                        >
-                                            <Camera size={18} />
-                                        </button>
+                                            <div
+                                                className="absolute bottom-2 right-2
+    w-10 h-10 rounded-full
+    bg-cyan-500 text-slate-950
+    flex items-center justify-center"
+                                            >
+                                                <Camera size={24} className="text-white" />
+                                            </div>
+                                        </label>
 
                                     </div>
 
@@ -154,6 +280,8 @@ export default function OrganizerProfile() {
 
                                 </div>
 
+                                <p className="pt-5">{profile.bio}</p>
+
                             </div>
 
                             {/* Right Section */}
@@ -171,6 +299,14 @@ export default function OrganizerProfile() {
                                     <div className="grid md:grid-cols-2 gap-6">
 
                                         <Input
+                                            icon={<User size={18} />}
+                                            label="Full Name"
+                                            name="username"
+                                            value={profile.username}
+                                            onChange={handleChange}
+                                        />
+
+                                        <Input
                                             icon={<Mail size={18} />}
                                             label="Email"
                                             name="email"
@@ -182,7 +318,7 @@ export default function OrganizerProfile() {
                                             icon={<Phone size={18} />}
                                             label="Phone"
                                             name="phone"
-                                            value={profile.phone}
+                                            value={profile.phonenumber}
                                             onChange={handleChange}
                                         />
 
@@ -201,6 +337,30 @@ export default function OrganizerProfile() {
                                             value={profile.location}
                                             onChange={handleChange}
                                         />
+
+                                        <Input
+                                            icon={<Lock size={18} />}
+                                            label="Password"
+                                            name="password"
+                                            value={profile.password}
+                                            type="password"
+                                            onChange={handleChange}
+                                        />
+
+                                        <Input
+                                            icon={<Lock size={18} />}
+                                            label="Confirm Password"
+                                            name="confirmPassword"
+                                            value={confirmPassword}
+                                            type="password"
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                        />
+
+                                        {passwordMatchError && (
+                                            <p className="mt-3 text-yellow-600 text-sm text-center">
+                                                Password and confirm password must be same
+                                            </p>
+                                        )}
 
                                         <div className="md:col-span-2">
 
@@ -236,7 +396,7 @@ export default function OrganizerProfile() {
 
                                 </div>
 
-                                {/* Social Links */}
+                                {/* Social Links
 
                                 <div className="bg-slate-900/70 border border-cyan-500/20 rounded-3xl p-8">
 
@@ -272,13 +432,13 @@ export default function OrganizerProfile() {
 
                                     </div>
 
-                                </div>
+                                </div> */}
 
                                 {/* Settings */}
 
-                                <div className="bg-slate-900/70 border border-cyan-500/20 rounded-3xl p-8 flex flex-wrap gap-4 justify-between items-center">
+                                <div className="bg-slate-900/70 border border-cyan-500/20 rounded-3xl p-8 flex flex-wrap gap-4 justify-center items-center">
 
-                                    <div className="flex gap-4">
+                                    {/* <div className="flex gap-4">
 
                                         <button className="flex items-center gap-2 px-5 py-3 rounded-xl border border-cyan-500 text-cyan-400 hover:bg-cyan-500 hover:text-black transition">
                                             <Lock size={18} />
@@ -290,9 +450,10 @@ export default function OrganizerProfile() {
                                             Two-Factor Auth
                                         </button>
 
-                                    </div>
+                                    </div> */}
 
-                                    <button className="flex items-center gap-2 px-8 py-3 rounded-xl bg-cyan-500 text-black font-semibold hover:bg-cyan-400 transition shadow-[0_0_20px_rgba(34,211,238,.4)]">
+                                    <button className="flex items-center gap-2 px-8 py-3 rounded-xl bg-cyan-500 text-black font-semibold
+                                     hover:bg-cyan-400 transition shadow-[0_0_20px_rgba(34,211,238,.4)]" onClick={handleUpdate}>
 
                                         <Save size={18} />
 
