@@ -38,7 +38,7 @@ function EventDetails() {
 
                     <EventInfo />
 
-                    <EventSchedule />
+                    {/* <EventSchedule />
 
                     <div>
 
@@ -59,7 +59,7 @@ function EventDetails() {
 
                         </div>
 
-                    </div>
+                    </div> */}
 
                     <VenueMap />
 

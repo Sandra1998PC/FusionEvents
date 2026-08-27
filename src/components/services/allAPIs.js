@@ -32,3 +32,8 @@ export const updateAdminAPI = async(reqBody) => {
 export const addEventAPI = async(reqBody) => {
     return await commonAPI("POST",'/addEvent',reqBody)
 }
+
+// get all events
+export const getAllEvents = async () => {
+    return await commonAPI("GET",`/getAllEvents`,{})
+}

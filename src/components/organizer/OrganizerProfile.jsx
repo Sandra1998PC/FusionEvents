@@ -67,7 +67,8 @@ export default function OrganizerProfile() {
             location,
             website,
             bio,
-            profileImage
+            profileImage,
+            organization
         } = profile;
 
         if (
@@ -77,7 +78,8 @@ export default function OrganizerProfile() {
             !password ||
             !location ||
             !website ||
-            !bio
+            !bio ||
+            !organization
         ) {
             Swal.fire({
                 title: "Please Fill the form Completely!!!",
@@ -103,6 +105,7 @@ export default function OrganizerProfile() {
         reqBody.append("location", location);
         reqBody.append("website", website);
         reqBody.append("bio", bio);
+        reqBody.append("organization", organization);
 
         if (profileImage instanceof File) {
             reqBody.append("profileImage", profileImage);

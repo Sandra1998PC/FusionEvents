@@ -1,4 +1,4 @@
-import { Calendar, Clock3, ImagePlus, Images, MapPin } from "lucide-react";
+import { Calendar, Clock3, ImagePlus, Images, MapPin, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import OrganizerSidebar from "../components/organizer/OrganizerSidebar";
 import OrganizerHeader from "../components/organizer/OrganizerHeader";
@@ -10,16 +10,20 @@ export default function CreateEvent() {
     const [gallery, setGallery] = useState([]);
     const [event, setEvent] = useState({
         eventname: "", category: "Technology", description: "", venue: "",
-        date: "", time: "", price: 0, seats: 0, bannerImage: "",organizername:"",organizerId:""
+        date: "", time: "", price: 0, seats: 0, bannerImage: "", organizername: "", organizerId: ""
     })
     const [preview, setPreview] = useState("")
     console.log("event : ", event)
 
-    useEffect(()=>{
+    const organizerData = () =>{
         const data = JSON.parse(sessionStorage.getItem("user"))
         console.log("data : ", data)
-        setEvent({...event,organizername:data.username,organizerId:data._id})
-    },[])
+        setEvent({ ...event, organizername: data.username, organizerId: data._id })
+    }
+
+    useEffect(() => {
+        organizerData()
+    }, [])
 
     const handleBanner = (e) => {
         setBanner(e.target.files[0]);
@@ -37,11 +41,17 @@ export default function CreateEvent() {
         setGallery([...e.target.files]);
     };
 
+    const imgClose = () => {
+        setPreview("")
+        setEvent({ ...event, bannerImage: "" })
+    }
+
 
     const addEvent = async (e) => {
         e.preventDefault();
+        organizerData()
         console.log("inside handle update")
-        const { eventname, category, description, venue, date, time, price, seats, bannerImage,organizername,organizerId } = event;
+        const { eventname, category, description, venue, date, time, price, seats, bannerImage, organizername, organizerId } = event;
 
         if (!eventname || !category || !description || !venue || !date || !time || !price || !seats
         ) {
@@ -79,7 +89,7 @@ export default function CreateEvent() {
                 });
                 setEvent({
                     eventname: "", category: "Technology", description: "", venue: "",
-                    date: "", time: "", price: 0, seats: 0, bannerImage: ""
+                    date: "", time: "", price: 0, seats: 0, bannerImage: "", organizername: "", organizerId: ""
                 })
                 setPreview("")
             }
@@ -289,12 +299,13 @@ export default function CreateEvent() {
 
                                 {/* Banner Upload */}
 
-                                <div>
+                                <div className="relative" >
                                     <label className="block mb-2 font-medium">
                                         Banner Upload
                                     </label>
 
-                                    <label className="cursor-pointer flex flex-col items-center justify-center h-48 rounded-2xl border-2 border-dashed border-cyan-500/30 hover:border-cyan-400 transition">
+                                    <label className="cursor-pointer flex flex-col items-center justify-center h-48 rounded-2xl 
+                                     border-2 border-dashed border-cyan-500/30 hover:border-cyan-400 transition">
                                         {
                                             preview != "" ?
                                                 (<img
@@ -323,8 +334,10 @@ export default function CreateEvent() {
                                             hidden
                                             onChange={handleBanner}
                                         />
-
                                     </label>
+                                    {
+                                        preview != "" && < X className="absolute right-1 top-1 bg-red-500 text-white-400" onClick={imgClose} />
+                                    }
                                 </div>
 
                                 {/* Gallery Upload */}

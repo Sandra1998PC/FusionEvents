@@ -13,6 +13,7 @@ import AdminHeader from "./AdminHeader";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { updateAdminAPI } from "../services/allAPIs";
+import axiosInstance from "../services/axiosInstance";
 
 export default function AdminProfile() {
     const [profile, setProfile] = useState({})
