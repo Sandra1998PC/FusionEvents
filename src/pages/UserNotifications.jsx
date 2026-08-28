@@ -1,64 +1,152 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Bell,
     Calendar,
     CheckCircle,
+    IndianRupee,
     Ticket,
+    Users,
     XCircle,
 } from "lucide-react";
 import TopBar from '../components/users/TopBar';
 import Sidebar from '../components/users/Sidebar';
+import Swal from 'sweetalert2';
+import { getUserNotifAPI } from '../components/services/allAPIs';
 
-const notifications = [
+// const notifications = [
+//     {
+//         id: 1,
+//         title: "Registration Successful",
+//         message: "You have registered for Tech Summit 2026.",
+//         time: "5 minutes ago",
+//         icon: CheckCircle,
+//         color: "text-green-400",
+//         bg: "bg-green-500/10",
+//     },
+//     {
+//         id: 2,
+//         title: "Ticket Downloaded",
+//         message: "Your event ticket has been downloaded.",
+//         time: "1 hour ago",
+//         icon: Ticket,
+//         color: "text-cyan-400",
+//         bg: "bg-cyan-500/10",
+//     },
+//     {
+//         id: 3,
+//         title: "Event Reminder",
+//         message: "Tech Summit 2026 starts tomorrow at 9:00 AM.",
+//         time: "Yesterday",
+//         icon: Bell,
+//         color: "text-yellow-400",
+//         bg: "bg-yellow-500/10",
+//     },
+//     {
+//         id: 4,
+//         title: "Registration Cancelled",
+//         message: "Your registration has been cancelled successfully.",
+//         time: "2 days ago",
+//         icon: XCircle,
+//         color: "text-red-400",
+//         bg: "bg-red-500/10",
+//     },
+//     {
+//         id: 5,
+//         title: "Schedule Updated",
+//         message: "Workshop timing has been updated.",
+//         time: "3 days ago",
+//         icon: Calendar,
+//         color: "text-purple-400",
+//         bg: "bg-purple-500/10",
+//     },
+// ];
+
+const icons = [
     {
-        id: 1,
-        title: "Registration Successful",
-        message: "You have registered for Tech Summit 2026.",
-        time: "5 minutes ago",
+        type: "success",
         icon: CheckCircle,
         color: "text-green-400",
         bg: "bg-green-500/10",
     },
     {
-        id: 2,
-        title: "Ticket Downloaded",
-        message: "Your event ticket has been downloaded.",
-        time: "1 hour ago",
+        type: "ticket",
         icon: Ticket,
         color: "text-cyan-400",
         bg: "bg-cyan-500/10",
     },
     {
-        id: 3,
-        title: "Event Reminder",
-        message: "Tech Summit 2026 starts tomorrow at 9:00 AM.",
-        time: "Yesterday",
+        type: "notif",
         icon: Bell,
         color: "text-yellow-400",
         bg: "bg-yellow-500/10",
     },
     {
-        id: 4,
-        title: "Registration Cancelled",
-        message: "Your registration has been cancelled successfully.",
-        time: "2 days ago",
+        type: "cancel",
         icon: XCircle,
         color: "text-red-400",
         bg: "bg-red-500/10",
     },
     {
-        id: 5,
-        title: "Schedule Updated",
-        message: "Workshop timing has been updated.",
-        time: "3 days ago",
+        type: "calender",
         icon: Calendar,
         color: "text-purple-400",
         bg: "bg-purple-500/10",
     },
-];
+    {
+        type: "payment",
+        icon: IndianRupee,
+        bg: "bg-green-500/10",
+        color: "text-green-400",
+    },
+    {
+        type: "registration",
+        icon: Users,
+        bg: "bg-cyan-500/10",
+        color: "text-cyan-400",
+    }
+]
 
 
 function UserNotifications() {
+    const [notifications, setNotifications] = useState([])
+    const [userData, setUserData] = useState({})
+    console.log(userData._id);
+
+    const getNotifs = async () => {
+        debugger
+        try {
+            const result = await getUserNotifAPI(userData._id)
+            console.log(result)
+            if (result.status == 200) {
+                const data = result.data
+                console.log(`Notif Data : `, data)
+                setNotifications(data)
+            }
+            else {
+                Swal.fire({
+                    title: "Something went Wrong !!!",
+                    icon: "error"
+                });
+            }
+        }
+        catch (error) {
+            console.log(error)
+            Swal.fire({
+                title: "Something went Wrong !!!",
+                icon: "error"
+            });
+        }
+    }
+    useEffect(() => {
+        const data = JSON.parse(sessionStorage.getItem("user"))
+        console.log("data : ", data)
+        setUserData(data)
+    }, [])
+    useEffect(() => {
+        if (userData?._id) {
+            getNotifs();
+        }
+    }, [userData]);
     return (
         <div className="flex bg-slate-950">
 
@@ -97,39 +185,51 @@ function UserNotifications() {
 
                             {/* Notifications */}
                             <div className="space-y-5">
-                                {notifications.map((item) => {
-                                    const Icon = item.icon;
+                                {notifications?.map((item) => {
+
+                                    const iconData = icons.find(
+                                        ele => ele.type === item.type
+                                    );
+
+                                    const Icon = iconData?.icon;
 
                                     return (
                                         <div
-                                            key={item.id}
+                                            key={item._id}
                                             className="bg-white/5 border border-white/10 rounded-2xl p-5 hover:border-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,.2)] transition"
                                         >
+
                                             <div className="flex items-start gap-4">
 
                                                 <div
-                                                    className={`w-12 h-12 rounded-xl flex items-center justify-center ${item.bg}`}
+                                                    className={`w-12 h-12 rounded-xl flex items-center justify-center ${iconData?.bg}`}
                                                 >
-                                                    <Icon size={22} className={item.color} />
+                                                    {Icon && (
+                                                        <Icon
+                                                            size={22}
+                                                            className={iconData?.color}
+                                                        />
+                                                    )}
                                                 </div>
 
                                                 <div className="flex-1">
+
                                                     <div className="flex justify-between items-center">
+
                                                         <h3 className="text-white font-semibold text-lg">
-                                                            {item.title}
+                                                            {item.userTitle}
                                                         </h3>
 
-                                                        <span className="text-sm text-slate-500">
-                                                            {item.time}
-                                                        </span>
                                                     </div>
 
                                                     <p className="text-slate-400 mt-2">
-                                                        {item.message}
+                                                        {item.Message}
                                                     </p>
+
                                                 </div>
 
                                             </div>
+
                                         </div>
                                     );
                                 })}

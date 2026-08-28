@@ -47,3 +47,13 @@ export const viewEventAPI = async (eventID) => {
 export const addReviewAPI = async (reqBody) => {
      return await commonAPI("POST", `/review`, reqBody)
 }
+
+// get all user notif
+export const getUserNotifAPI = async (userID) => {
+    return await commonAPI("GET", `/user/${userID}/notifications`, {})
+}
+
+// get all organizer notif
+export const getOrganizerNotifAPI = async (organizerID) => {
+    return await commonAPI("GET", `/organizer/${organizerID}/notifications`, {})
+}
