@@ -6,7 +6,7 @@ import {
     IndianRupee
 } from "lucide-react";
 
-export default function EventInfo() {
+export default function EventInfo({eventDetails}) {
 
     return (
 
@@ -21,35 +21,35 @@ export default function EventInfo() {
                 <div className="flex items-center gap-3">
                     <Calendar className="text-cyan-400" />
                     <p className="text-slate-300">
-                        25 December 2026
+                        {eventDetails.date}
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
                     <Clock className="text-cyan-400" />
                     <p className="text-slate-300">
-                        9:00 AM
+                        {eventDetails.time}
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
                     <MapPin className="text-cyan-400" />
                     <p className="text-slate-300">
-                        Kochi Marriott Hotel
+                        {eventDetails.venue}
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
                     <IndianRupee className="text-cyan-400" />
                     <p className="text-slate-300">
-                        ₹999
+                        {eventDetails.price}
                     </p>
                 </div>
 
                 <div className="flex items-center gap-3">
                     <User className="text-cyan-400" />
                     <p className="text-slate-300">
-                        Fusion Events
+                       {eventDetails.organization}
                     </p>
                 </div>
 
@@ -63,14 +63,7 @@ export default function EventInfo() {
 
                 <p className="text-slate-400 leading-8">
 
-                    Join thousands of developers,
-                    designers,
-                    entrepreneurs and startups for a day
-                    filled with networking,
-                    AI,
-                    Cloud Computing,
-                    Web Development,
-                    Workshops and exciting keynote sessions.
+                    {eventDetails.description}
 
                 </p>
 

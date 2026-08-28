@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Banner from '../components/users/Banner';
 import EventInfo from '../components/users/EventInfo';
 import EventSchedule from '../components/users/EventSchedule';
@@ -8,6 +8,9 @@ import ReviewSection from '../components/users/ReviewSection';
 import RegistrationBox from '../components/users/RegistrationBox';
 import john from '../assets/John.png'
 import sarah from '../assets/Sarah.png'
+import { useNavigate, useParams } from 'react-router-dom';
+import { viewEventAPI } from '../components/services/allAPIs';
+import Swal from 'sweetalert2';
 
 const speakers = [
     {
@@ -27,16 +30,58 @@ const speakers = [
 ];
 
 function EventDetails() {
+    const idObj = useParams()
+    console.log(idObj.id)
+    const [eventData, setEventData] = useState({})
+    const navigate = useNavigate()
+    const [eventDetails, setEventDetails] = useState({date : "",time : "",venue : "",date : "",price : "",description : "", organization : ""})
+    console.log(eventDetails);
+
+    const getEventDetails = async () => {
+        try {
+            const result = await viewEventAPI(idObj.id)
+            if (result.status == 200) {
+                const data = result.data
+                console.log(`Event Data : `, data)
+                setEventData(data)
+            }
+            else {
+                Swal.fire({
+                    title: "Something went Wrong !!!",
+                    icon: "error"
+                });
+                navigate('users/events')
+            }
+        }
+        catch (error) {
+            console.log(error)
+            Swal.fire({
+                title: "Something went Wrong !!!",
+                icon: "error"
+            });
+            navigate('users/events')
+        }
+    }
+
+    useEffect(() => {
+        getEventDetails()
+    }, [])
+
+    useEffect(() => {
+        setEventDetails({...eventDetails,date : eventData.date,time : eventData.time,venue : eventData.venue,
+            date : eventData.date,price : eventData.price,description : eventData.description,organization : eventData.organization})
+    },[eventData])
+
     return (
         <div className="bg-slate-950 min-h-screen">
 
-            <Banner />
+            <Banner banner={eventData.bannerImage} name={eventData.eventname} />
 
             <div className="max-w-7xl mx-auto px-6 py-10 grid lg:grid-cols-3 gap-8">
 
                 <div className="lg:col-span-2 space-y-10">
 
-                    <EventInfo />
+                    <EventInfo eventDetails={eventDetails} />
 
                     {/* <EventSchedule />
 
@@ -61,9 +106,9 @@ function EventDetails() {
 
                     </div> */}
 
-                    <VenueMap />
+                    <VenueMap venue = {eventData.venue} />
 
-                    <ReviewSection />
+                    <ReviewSection data = {{ eventname : eventData.eventname, eventId : eventData._id, organizerId : eventData.organizerId }} />
 
                 </div>
 

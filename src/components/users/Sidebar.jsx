@@ -13,17 +13,17 @@ const menuItems = [
   {
     name: "Dashboard",
     icon: LayoutDashboard,
-    path: "/users/:id/dashboard",
+    path: "/users/id/dashboard",
   },
   {
     name: "My Events",
     icon: CalendarDays,
-    path: "/users/:id/events",
+    path: "/users/events",
   },
   {
     name: "Tickets",
     icon: Ticket,
-    path: "/users/:id/tickets",
+    path: "/users/tickets",
   },
   // {
   //   name: "Bookmarks",
@@ -33,12 +33,12 @@ const menuItems = [
   {
     name: "Notifications",
     icon: Bell,
-    path: "/users/:id/notifications",
+    path: "/users/notifications",
   },
   {
     name: "Profile",
     icon: User,
-    path: "/users/:id/profile",
+    path: "/users/profile",
   },
 ];
 

@@ -1,6 +1,9 @@
 import React from 'react'
 
-function VenueMap() {
+function VenueMap({venue}) {
+     const loc = `https://www.google.com/maps?q=${encodeURIComponent(venue)}&output=embed`;
+    console.log((venue));
+    
     return (
         <div className="bg-white/5 p-8 rounded-3xl border border-white/10">
 
@@ -10,7 +13,7 @@ function VenueMap() {
 
             <iframe
                 title="Venue Map"
-                src="https://www.google.com/maps/embed?pb=YOUR_GOOGLE_MAP_LINK"
+                src={loc}
                 className="rounded-2xl w-full h-96"
                 loading="lazy"
             />

@@ -293,7 +293,7 @@ export default function Events() {
                                                 </h3>
 
                                                 <button className="px-5 py-2 rounded-xl bg-cyan-500 text-slate-950 font-semibold hover:bg-cyan-400 transition"
-                                                    onClick={() => { navigate('/users/:id/events/details') }}>
+                                                    onClick={() => { navigate(`/users/${event._id}/events/details`) }}>
 
                                                     View Details
 

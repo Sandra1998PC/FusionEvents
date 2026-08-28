@@ -37,3 +37,13 @@ export const addEventAPI = async(reqBody) => {
 export const getAllEvents = async () => {
     return await commonAPI("GET",`/getAllEvents`,{})
 }
+
+// view Event
+export const viewEventAPI = async (eventID) => {
+    return await commonAPI("GET", `/view/${eventID}/event`, {})
+}
+
+// add Review
+export const addReviewAPI = async (reqBody) => {
+     return await commonAPI("POST", `/review`, reqBody)
+}

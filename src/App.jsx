@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import { Routes, Route } from 'react-router-dom';
-import Login from './pages/Login';
+import Login from './pages/Login'
 import Home from './pages/Home';
 import Register from './pages/Register';
 import UsersDashboard from './pages/UsersDashboard';
@@ -31,12 +31,12 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/users/:id/dashboard" element={<UsersDashboard />} />
-        <Route path="/users/:id/events" element={<Events />} />
+        <Route path="/users/events" element={<Events />} />
         <Route path="/users/:id/events/details" element={<EventDetails />} />
-        <Route path="/users/:id/tickets" element={<Ticket />} />
-        <Route path="/users/:id/profile" element={<UserProfile />} />
-        <Route path="/users/:id/editprofile" element={<Profile />} />
-        <Route path="/users/:id/notifications" element={<UserNotifications />} />
+        <Route path="/users/tickets" element={<Ticket />} />
+        <Route path="/users/profile" element={<UserProfile />} />
+        <Route path="/users/editprofile" element={<Profile />} />
+        <Route path="/users/notifications" element={<UserNotifications />} />
         <Route path="/organizer/:id/dashboard" element={<OrganizerDashboard />} />
         <Route path="/organizer/:id/manageevents" element={<ManageEventsTable />} />
         <Route path="/organizer/:id/createevent" element={<CreateEvent />} />
