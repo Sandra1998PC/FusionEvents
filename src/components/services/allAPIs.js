@@ -57,3 +57,8 @@ export const getUserNotifAPI = async (userID) => {
 export const getOrganizerNotifAPI = async (organizerID) => {
     return await commonAPI("GET", `/organizer/${organizerID}/notifications`, {})
 }
+
+// payment
+export const makePaymentAPI = async(reqBody)=>{
+    return await commonAPI("POST", `/payment`, reqBody)
+}

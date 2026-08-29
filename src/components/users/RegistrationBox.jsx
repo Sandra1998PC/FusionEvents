@@ -1,6 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-function RegistrationBox() {
+function RegistrationBox({ event }) {
+    const [number, setNumber] = useState(1)
+    const navigate = useNavigate()
+
+    const onRegister = () => {
+        navigate("/users/register", {
+            state: {
+                event: event,
+                number: number
+            }
+        });
+    }
     return (
         <div className="sticky top-24">
 
@@ -10,7 +22,7 @@ function RegistrationBox() {
                     Register
                 </h2>
 
-                <label className="text-slate-300">
+                {/* <label className="text-slate-300">
                     Ticket Type
                 </label>
 
@@ -26,11 +38,12 @@ function RegistrationBox() {
 
                 <label className="text-slate-300">
                     Quantity
-                </label>
+                </label> */}
 
                 <input
                     type="number"
-                    defaultValue={1}
+                    value={number}
+                    onChange={(e) => setNumber(e.target.value)}
                     className="w-full mt-2 bg-slate-900 rounded-xl p-3 text-white"
                 />
 
@@ -41,12 +54,13 @@ function RegistrationBox() {
                     </p>
 
                     <p className="text-cyan-400 text-xl">
-                        ₹999
+                        {event.price}
                     </p>
 
                 </div>
 
-                <button className="mt-8 w-full py-4 rounded-xl bg-cyan-400 text-slate-950 font-semibold hover:bg-cyan-300">
+                <button className="mt-8 w-full py-4 rounded-xl bg-cyan-400 text-slate-950 font-semibold hover:bg-cyan-300"
+                onClick={onRegister}>
 
                     Register Now
 

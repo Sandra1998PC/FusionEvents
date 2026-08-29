@@ -21,6 +21,9 @@ import AdminNotifications from './components/admin/AdminNotifications';
 import AdminProfile from './components/admin/AdminProfile';
 import OrganizerProfile from './components/organizer/OrganizerProfile';
 import Profile from './pages/Profile';
+import RegisterEvent from './components/users/RegisterEvent';
+import PaymentSuccess from './components/users/PaymentSuccess';
+import PaymentFailure from './components/users/PaymentFailure';
 
 function App() {
   return (
@@ -37,6 +40,7 @@ function App() {
         <Route path="/users/profile" element={<UserProfile />} />
         <Route path="/users/editprofile" element={<Profile />} />
         <Route path="/users/notifications" element={<UserNotifications />} />
+        <Route path="/users/register" element={<RegisterEvent />} />
         <Route path="/organizer/:id/dashboard" element={<OrganizerDashboard />} />
         <Route path="/organizer/:id/manageevents" element={<ManageEventsTable />} />
         <Route path="/organizer/:id/createevent" element={<CreateEvent />} />
@@ -46,7 +50,9 @@ function App() {
         <Route path="/admin/:id/usermanagement" element={<AdminTables />} />
         <Route path="/admin/:id/eventmanagement" element={<AdminOrganizer />} />
         <Route path="/admin/:id/notifications" element={<AdminNotifications />} />
-         <Route path="/admin/:id/profile" element={<AdminProfile />} />
+        <Route path="/admin/:id/profile" element={<AdminProfile />} />
+        <Route path="/payment/success" element={<PaymentSuccess />} />
+        <Route path="/payment/error" element={<PaymentFailure />} />
       </Routes>
     </>
   )

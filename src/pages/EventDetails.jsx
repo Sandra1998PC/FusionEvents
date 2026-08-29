@@ -31,11 +31,10 @@ const speakers = [
 
 function EventDetails() {
     const idObj = useParams()
-    console.log(idObj.id)
     const [eventData, setEventData] = useState({})
     const navigate = useNavigate()
     const [eventDetails, setEventDetails] = useState({date : "",time : "",venue : "",date : "",price : "",description : "", organization : ""})
-    console.log(eventDetails);
+    
 
     const getEventDetails = async () => {
         try {
@@ -112,7 +111,7 @@ function EventDetails() {
 
                 </div>
 
-                <RegistrationBox />
+                <RegistrationBox event = {eventData}/>
 
             </div>
 

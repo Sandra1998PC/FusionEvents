@@ -10,15 +10,15 @@ export default function CreateEvent() {
     const [gallery, setGallery] = useState([]);
     const [event, setEvent] = useState({
         eventname: "", category: "Technology", description: "", venue: "",
-        date: "", time: "", price: 0, seats: 0, bannerImage: "", organizername: "", organizerId: ""
+        date: "", time: "", price: 0, seats: 0, bannerImage: "", organizername: "", organizerId: "", organization: ""
     })
     const [preview, setPreview] = useState("")
     console.log("event : ", event)
 
-    const organizerData = () =>{
+    const organizerData = () => {
         const data = JSON.parse(sessionStorage.getItem("user"))
         console.log("data : ", data)
-        setEvent({ ...event, organizername: data.username, organizerId: data._id })
+        setEvent({ ...event, organizername: data?.username, organizerId: data?._id, organization: data?.organization })
     }
 
     useEffect(() => {
@@ -49,11 +49,37 @@ export default function CreateEvent() {
 
     const addEvent = async (e) => {
         e.preventDefault();
-        organizerData()
-        console.log("inside handle update")
-        const { eventname, category, description, venue, date, time, price, seats, bannerImage, organizername, organizerId } = event;
 
-        if (!eventname || !category || !description || !venue || !date || !time || !price || !seats
+        const data = JSON.parse(sessionStorage.getItem("user"));
+
+        const organizername = data?.username;
+        const organizerId = data?._id;
+        const organization = data?.organization;
+
+        console.log("Organizer Name:", organizername);
+        console.log("Organizer ID:", organizerId);
+
+        const {
+            eventname,
+            category,
+            description,
+            venue,
+            date,
+            time,
+            price,
+            seats,
+            bannerImage
+        } = event;
+
+        if (
+            !eventname ||
+            !category ||
+            !description ||
+            !venue ||
+            !date ||
+            !time ||
+            price === "" ||
+            seats === ""
         ) {
             Swal.fire({
                 title: "Please Fill the form Completely!!!",
@@ -74,35 +100,51 @@ export default function CreateEvent() {
         reqBody.append("seats", seats);
         reqBody.append("organizername", organizername);
         reqBody.append("organizerId", organizerId);
+        reqBody.append("organization", organization);
 
         if (bannerImage instanceof File) {
             reqBody.append("bannerImage", bannerImage);
         }
 
+        console.log("FormData:");
+
+        for (let [key, value] of reqBody.entries()) {
+            console.log(key, value);
+        }
+
         try {
             const result = await addEventAPI(reqBody);
+
+            console.log("Add Event Result:", result);
 
             if (result.status === 200) {
                 Swal.fire({
                     title: "Event Added Successfully !!!",
                     icon: "success"
                 });
+
                 setEvent({
-                    eventname: "", category: "Technology", description: "", venue: "",
-                    date: "", time: "", price: 0, seats: 0, bannerImage: "", organizername: "", organizerId: ""
-                })
-                setPreview("")
-            }
-            else {
-                Swal.fire({
-                    title: "Something Went Wrong !!!",
-                    icon: "error"
+                    eventname: "",
+                    category: "Technology",
+                    description: "",
+                    venue: "",
+                    date: "",
+                    time: "",
+                    price: 0,
+                    seats: 0,
+                    bannerImage: "",
+                    organizername: "",
+                    organizerId: ""
                 });
+
+                setPreview("");
             }
-        }
-        catch (error) {
+        } catch (error) {
+            console.log("Add Event Error:", error);
+
             Swal.fire({
                 title: "Something Went Wrong !!!",
+                text: error.response?.data?.message || "Server Error",
                 icon: "error"
             });
         }
