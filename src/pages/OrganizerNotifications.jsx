@@ -111,7 +111,6 @@ export default function OrganizerNotifications() {
     console.log(userData._id);
 
     const getNotifs = async () => {
-        debugger
         try {
             const result = await getOrganizerNotifAPI(userData._id)
             console.log(result)

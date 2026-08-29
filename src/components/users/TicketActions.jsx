@@ -3,9 +3,34 @@ import {
   Share2,
   Trash2
 } from "lucide-react";
+import Swal from "sweetalert2";
+import { removeTicketAPI } from "../services/allAPIs";
 
-export default function TicketActions() {
-
+export default function TicketActions({ data }) {
+  const cancelTicket = async () => {
+    try {
+      const result = await removeTicketAPI(data._id)
+      
+      if (result.status == 200) {
+        Swal.fire({
+          title: "Ticket Canceled Successfully",
+          icon: "success"
+        });
+      }
+      else {
+        Swal.fire({
+          title: "Something went Wrong !!!",
+          icon: "error"
+        });
+      }
+    }
+    catch (error) {
+      Swal.fire({
+        title: "Something went Wrong !!!",
+        icon: "error"
+      });
+    }
+  }
   return (
 
     <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 h-fit sticky top-24">
@@ -14,7 +39,7 @@ export default function TicketActions() {
         Actions
       </h2>
 
-      <button className="w-full flex items-center justify-center gap-3 py-4 rounded-xl bg-cyan-400 text-slate-950 font-semibold hover:bg-cyan-300 transition mb-4">
+      {/* <button className="w-full flex items-center justify-center gap-3 py-4 rounded-xl bg-cyan-400 text-slate-950 font-semibold hover:bg-cyan-300 transition mb-4">
 
         <Download size={20}/>
 
@@ -28,11 +53,12 @@ export default function TicketActions() {
 
         Share Ticket
 
-      </button>
+      </button> */}
 
-      <button className="w-full flex items-center justify-center gap-3 py-4 rounded-xl border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition">
+      <button className="w-full flex items-center justify-center gap-3 py-4 rounded-xl border border-red-500 text-red-400 hover:bg-red-500 hover:text-white transition"
+      onClick={cancelTicket}>
 
-        <Trash2 size={20}/>
+        <Trash2 size={20} />
 
         Cancel Ticket
 

@@ -7,7 +7,8 @@ import {
 
 // import qrCode from "../assets/qr-code.png";
 
-export default function TicketCard() {
+export default function TicketCard({data}) {
+console.log(data);
 
   return (
 
@@ -23,12 +24,12 @@ export default function TicketCard() {
           <div>
 
             <h2 className="text-3xl font-bold text-white">
-              Tech Summit 2026
+              {data.eventname}
             </h2>
 
-            <p className="text-cyan-400 mt-2">
+            {/* <p className="text-cyan-400 mt-2">
               Fusion Events
-            </p>
+            </p> */}
 
           </div>
 
@@ -53,7 +54,7 @@ export default function TicketCard() {
               </p>
 
               <h3 className="text-white">
-                Sandra P C
+                {data.name}
               </h3>
 
             </div>
@@ -67,12 +68,12 @@ export default function TicketCard() {
             </p>
 
             <h3 className="text-white font-semibold">
-              FE-2026-000245
+              {`TI-${data._id}`}
             </h3>
 
           </div>
 
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
 
             <Calendar className="text-cyan-400"/>
 
@@ -88,9 +89,9 @@ export default function TicketCard() {
 
             </div>
 
-          </div>
+          </div> */}
 
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
 
             <Armchair className="text-cyan-400"/>
 
@@ -106,13 +107,13 @@ export default function TicketCard() {
 
             </div>
 
-          </div>
+          </div> */}
 
           <div className="md:col-span-2 flex items-center gap-3">
 
             <MapPin className="text-cyan-400"/>
 
-            <div>
+            {/* <div>
 
               <p className="text-slate-400 text-sm">
                 Venue
@@ -122,7 +123,7 @@ export default function TicketCard() {
                 Kochi Marriott Hotel
               </h3>
 
-            </div>
+            </div> */}
 
           </div>
 

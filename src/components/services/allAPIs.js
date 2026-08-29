@@ -62,3 +62,13 @@ export const getOrganizerNotifAPI = async (organizerID) => {
 export const makePaymentAPI = async(reqBody)=>{
     return await commonAPI("POST", `/payment`, reqBody)
 }
+
+// get all user tickets
+export const getUserTicketsAPI = async (userID) => {
+    return await commonAPI("GET", `/user/${userID}/tickets`, {})
+}
+
+// remove Tickets 
+export const removeTicketAPI = async (ticketID) => {
+    return await commonAPI("DELETE", `/remove/${ticketID}/ticket`, {})
+}
