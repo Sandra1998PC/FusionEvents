@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Eye,
     Pencil,
@@ -9,49 +9,10 @@ import {
 } from "lucide-react";
 import OrganizerSidebar from "./OrganizerSidebar";
 import OrganizerHeader from "./OrganizerHeader";
+import Swal from "sweetalert2";
+import { getAllEvents } from "../services/allAPIs";
 
-const events = [
-    {
-        id: 1,
-        image:
-            "https://images.unsplash.com/photo-1511578314322-379afb476865?w=600",
-        title: "Tech Summit 2026",
-        date: "12 Aug 2026",
-        venue: "Bangalore",
-        participants: 350,
-        status: "Upcoming",
-    },
-    {
-        id: 2,
-        image:
-            "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=600",
-        title: "Music Fiesta",
-        date: "22 Aug 2026",
-        venue: "Kochi",
-        participants: 620,
-        status: "Live",
-    },
-    {
-        id: 3,
-        image:
-            "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?w=600",
-        title: "Startup Expo",
-        date: "5 Sep 2026",
-        venue: "Calicut",
-        participants: 180,
-        status: "Upcoming",
-    },
-    {
-        id: 4,
-        image:
-            "https://images.unsplash.com/photo-1515169067868-5387ec356754?w=600",
-        title: "AI Conference",
-        date: "14 Jul 2026",
-        venue: "Trivandrum",
-        participants: 510,
-        status: "Completed",
-    },
-];
+
 
 const badgeColor = (status) => {
     switch (status) {
@@ -67,6 +28,32 @@ const badgeColor = (status) => {
 };
 
 export default function ManageEventsTable() {
+    const [events,setEvents] = useState([]) 
+        const allEvents = async () => {
+                try {
+                            const result = await getAllEvents()
+                            console.log(result);
+                            
+                            if (result.status == 200) {
+                                setEvents(result.data)
+                            }
+                            else {
+                                Swal.fire({
+                                    title: "Something Went wrong !!!",
+                                    icon: "error"
+                                });
+                            }
+                        }
+                        catch (error) {
+                            Swal.fire({
+                                title: "Something Went wrong !!!",
+                                icon: "error"
+                            });
+                        }
+        }
+        useEffect(() => {
+            allEvents()
+        },[])
     return (
         <div className="flex bg-slate-950 min-h-screen">
 
@@ -98,7 +85,7 @@ export default function ManageEventsTable() {
 
                                     <tr>
 
-                                        <th className="px-6 py-4 text-left">Image</th>
+                                        {/* <th className="px-6 py-4 text-left">Image</th> */}
 
                                         <th className="px-6 py-4 text-left">Title</th>
 
@@ -126,7 +113,7 @@ export default function ManageEventsTable() {
                                         >
                                             {/* Image */}
 
-                                            <td className="px-6 py-4">
+                                            {/* <td className="px-6 py-4">
 
                                                 <img
                                                     src={event.image}
@@ -134,21 +121,21 @@ export default function ManageEventsTable() {
                                                     className="w-24 h-16 rounded-xl object-cover"
                                                 />
 
-                                            </td>
+                                            </td> */}
 
                                             {/* Title */}
 
                                             <td className="px-6 py-4">
 
                                                 <h3 className="font-semibold text-white">
-                                                    {event.title}
+                                                    {event.eventname}
                                                 </h3>
 
                                             </td>
 
                                             {/* Date */}
 
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4 w-50">
 
                                                 <div className="flex items-center gap-2 text-slate-300">
 
@@ -162,7 +149,7 @@ export default function ManageEventsTable() {
 
                                             {/* Venue */}
 
-                                            <td className="px-6 py-4">
+                                            <td className="px-6 py-4 w-75">
 
                                                 <div className="flex items-center gap-2 text-slate-300">
 

@@ -153,7 +153,7 @@ export default function AdminNotifications() {
 
                             {/* Filters */}
 
-                            <div className="flex flex-wrap gap-3 mb-8">
+                            {/* <div className="flex flex-wrap gap-3 mb-8">
 
                                 {[
                                     "All",
@@ -175,7 +175,7 @@ export default function AdminNotifications() {
                                     </button>
                                 ))}
 
-                            </div>
+                            </div> */}
 
                             {/* Notifications */}
 

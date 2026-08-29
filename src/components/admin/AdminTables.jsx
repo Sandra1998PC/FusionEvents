@@ -1,38 +1,9 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
-
-const users = [
-    {
-        id: 1,
-        name: "John Anderson",
-        role: "Organizer",
-        email: "john@gmail.com",
-        status: "Active",
-    },
-    {
-        id: 2,
-        name: "Sarah Williams",
-        role: "Participant",
-        email: "sarah@gmail.com",
-        status: "Pending",
-    },
-    {
-        id: 3,
-        name: "David Miller",
-        role: "Organizer",
-        email: "david@gmail.com",
-        status: "Blocked",
-    },
-    {
-        id: 4,
-        name: "Emma Johnson",
-        role: "Participant",
-        email: "emma@gmail.com",
-        status: "Active",
-    },
-];
+import { getAllUsersAPI } from "../services/allAPIs";
+import Swal from "sweetalert2";
 
 const badgeColor = (status) => {
     switch (status) {
@@ -61,6 +32,32 @@ const iconBtn =
     "p-2 rounded-lg transition hover:bg-slate-700 hover:text-cyan-400";
 
 function AdminTables() {
+    const [users, setUsers] = useState([])
+
+    const getAllUserData = async () => {
+        try {
+            const result = await getAllUsersAPI()
+            if (result.status == 200) {
+                setUsers(result.data.allUsers)
+            }
+            else {
+                Swal.fire({
+                    title: "Something Went wrong !!!",
+                    icon: "error"
+                });
+            }
+        }
+        catch (error) {
+            Swal.fire({
+                title: "Something Went wrong !!!",
+                icon: "error"
+            });
+        }
+
+    }
+    useEffect(() => {
+        getAllUserData()
+    }, [])
     return (
         <div className="flex bg-slate-950 min-h-screen">
 
@@ -118,14 +115,14 @@ function AdminTables() {
 
                                         <tbody>
 
-                                            {users.map((user) => (
+                                            {users.filter(item => item.role != "Admin").map((user) => (
 
                                                 <tr
-                                                    key={user.id}
+                                                    key={user._id}
                                                     className="border-b border-slate-800 hover:bg-slate-800/40 transition"
                                                 >
                                                     <td className="px-6 py-5 text-white font-medium">
-                                                        {user.name}
+                                                        {user.username}
                                                     </td>
 
                                                     <td className="px-6 py-5 text-slate-300">

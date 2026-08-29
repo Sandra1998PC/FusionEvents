@@ -305,7 +305,7 @@ export default function AdminProfile() {
 
                                                 <input
                                                     type="text"
-                                                    name="phone"
+                                                    name="phonenumber"
                                                     value={profile.phonenumber}
                                                     onChange={handleChange}
                                                     className="w-full bg-slate-800 border border-slate-700

@@ -1,34 +1,9 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
-
-const events = [
-    {
-        id: 1,
-        title: "Tech Summit 2026",
-        organizer: "John Anderson",
-        participants: 320,
-        revenue: "₹1,25,000",
-        status: "Upcoming",
-    },
-    {
-        id: 2,
-        title: "Startup Expo",
-        organizer: "Sarah Williams",
-        participants: 180,
-        revenue: "₹82,500",
-        status: "Live",
-    },
-    {
-        id: 3,
-        title: "AI Conference",
-        organizer: "David Miller",
-        participants: 420,
-        revenue: "₹2,30,000",
-        status: "Completed",
-    },
-];
+import Swal from 'sweetalert2';
+import { getAllEvents } from '../services/allAPIs';
 
 const badgeColor = (status) => {
     switch (status) {
@@ -57,6 +32,32 @@ const iconBtn =
     "p-2 rounded-lg transition hover:bg-slate-700 hover:text-cyan-400";
 
 function AdminOrganizer() {
+    const [events,setEvents] = useState([]) 
+    const allEvents = async () => {
+            try {
+                        const result = await getAllEvents()
+                        console.log(result);
+                        
+                        if (result.status == 200) {
+                            setEvents(result.data)
+                        }
+                        else {
+                            Swal.fire({
+                                title: "Something Went wrong !!!",
+                                icon: "error"
+                            });
+                        }
+                    }
+                    catch (error) {
+                        Swal.fire({
+                            title: "Something Went wrong !!!",
+                            icon: "error"
+                        });
+                    }
+    }
+    useEffect(() => {
+        allEvents()
+    },[])
     return (
         <div className="flex bg-slate-950 min-h-screen">
 
@@ -107,9 +108,9 @@ function AdminOrganizer() {
                                                     Participants
                                                 </th>
 
-                                                <th className="text-left px-6 py-4">
+                                                {/* <th className="text-left px-6 py-4">
                                                     Revenue
-                                                </th>
+                                                </th> */}
 
                                                 <th className="text-left px-6 py-4">
                                                     Status
@@ -128,24 +129,24 @@ function AdminOrganizer() {
                                             {events.map((event) => (
 
                                                 <tr
-                                                    key={event.id}
+                                                    key={event._id}
                                                     className="border-b border-slate-800 hover:bg-slate-800/40 transition"
                                                 >
                                                     <td className="px-6 py-5 text-white font-medium">
-                                                        {event.title}
+                                                        {event.eventname}
                                                     </td>
 
                                                     <td className="px-6 py-5 text-slate-300">
-                                                        {event.organizer}
+                                                        {event.organizername}
                                                     </td>
 
                                                     <td className="px-6 py-5 text-slate-300">
-                                                        {event.participants}
+                                                        {event.ticketsSold}
                                                     </td>
 
-                                                    <td className="px-6 py-5 text-cyan-400 font-semibold">
+                                                    {/* <td className="px-6 py-5 text-cyan-400 font-semibold">
                                                         {event.revenue}
-                                                    </td>
+                                                    </td> */}
 
                                                     <td className="px-6 py-5">
 
