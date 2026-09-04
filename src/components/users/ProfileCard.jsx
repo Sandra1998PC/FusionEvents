@@ -87,7 +87,7 @@ export default function ProfileCard() {
       </div>
 
       <button className="mt-8 w-full py-3 rounded-xl bg-cyan-400 text-slate-900
-       font-semibold hover:bg-cyan-300 transition" onClick={() => navigate(`/users/${profileData._id}/editprofile`)}>
+       font-semibold hover:bg-cyan-300 transition" onClick={() => navigate(`/users/editprofile`)}>
 
         Edit Profile
 

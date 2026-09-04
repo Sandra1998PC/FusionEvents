@@ -10,7 +10,9 @@ import {
 import OrganizerSidebar from "./OrganizerSidebar";
 import OrganizerHeader from "./OrganizerHeader";
 import Swal from "sweetalert2";
-import { getAllEvents } from "../services/allAPIs";
+import { deleteEventAPI, getEventAPI } from "../services/allAPIs";
+import ViewEventModal from "./ViewEventModal";
+import EditEventModal from "./EditEventModal";
 
 
 
@@ -28,32 +30,68 @@ const badgeColor = (status) => {
 };
 
 export default function ManageEventsTable() {
-    const [events,setEvents] = useState([]) 
-        const allEvents = async () => {
-                try {
-                            const result = await getAllEvents()
-                            console.log(result);
-                            
-                            if (result.status == 200) {
-                                setEvents(result.data)
-                            }
-                            else {
-                                Swal.fire({
-                                    title: "Something Went wrong !!!",
-                                    icon: "error"
-                                });
-                            }
-                        }
-                        catch (error) {
-                            Swal.fire({
-                                title: "Something Went wrong !!!",
-                                icon: "error"
-                            });
-                        }
+    const [events, setEvents] = useState([]);
+    const [orgId, setOrgId] = useState("");
+    const [selectedEvent, setSelectedEvent] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+
+    const allEvents = async (id) => {
+        try {
+            const result = await getEventAPI(id);
+            console.log("API Result:", result);
+            if (result.status === 200) {
+                setEvents(result.data);
+            } else {
+                Swal.fire({
+                    title: "Something Went Wrong !!!",
+                    icon: "error"
+                });
+            }
+        } catch (error) {
+            console.log("API Error:", error);
+            Swal.fire({
+                title: "Something Went Wrong !!!",
+                icon: "error"
+            });
         }
-        useEffect(() => {
-            allEvents()
-        },[])
+    };
+
+    const deleteEvent = async (eventID) => {
+        try{
+            const deleteResult = await deleteEventAPI(eventID);
+            console.log("Delete API Result:", deleteResult);
+            if (deleteResult.status === 200) {
+                Swal.fire({
+                    title: "Event Deleted Successfully",
+                    icon: "success"
+                });
+                allEvents(orgId); // Refresh the events list after deletion
+            } else {
+                Swal.fire({
+                    title: "Something Went Wrong !!!",
+                    icon: "error"
+                });
+            }
+
+        }catch (error) {
+            console.log("API Error:", error);
+            Swal.fire({
+                title: "Something Went Wrong !!!",
+                icon: "error"
+            });
+        }
+    }
+
+    useEffect(() => {
+        const user = JSON.parse(sessionStorage.getItem("user"));
+        console.log("Logged User:", user);
+        if (user?._id) {
+            setOrgId(user._id);
+            allEvents(user._id);
+        }
+
+    }, []);
     return (
         <div className="flex bg-slate-950 min-h-screen">
 
@@ -200,6 +238,10 @@ export default function ManageEventsTable() {
                                                     <button
                                                         className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500 hover:text-white transition"
                                                         title="View"
+                                                        onClick={() => {
+                                                            setSelectedEvent(event);
+                                                            setShowModal(true);
+                                                        }}
                                                     >
                                                         <Eye size={18} className="mx-auto" />
                                                     </button>
@@ -207,6 +249,10 @@ export default function ManageEventsTable() {
                                                     <button
                                                         className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500 hover:text-white transition"
                                                         title="Edit"
+                                                        onClick={() => {
+                                                            setSelectedEvent(event);
+                                                            setShowEditModal(true);
+                                                        }}
                                                     >
                                                         <Pencil size={18} className="mx-auto" />
                                                     </button>
@@ -214,6 +260,7 @@ export default function ManageEventsTable() {
                                                     <button
                                                         className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition"
                                                         title="Delete"
+                                                        onClick={() => deleteEvent(event._id)}
                                                     >
                                                         <Trash2 size={18} className="mx-auto" />
                                                     </button>
@@ -226,12 +273,32 @@ export default function ManageEventsTable() {
 
                                     ))}
 
+                                    {showModal && (
+                                        <ViewEventModal
+                                            event={selectedEvent}
+                                            onClose={() => {
+                                                setShowModal(false);
+                                                setSelectedEvent(null);
+                                            }}
+                                        />
+                                    )}
+
+
                                 </tbody>
 
                             </table>
 
                         </div>
-
+                                    {showEditModal && (
+                                        <EditEventModal
+                                            event={selectedEvent}
+                                            onClose={() => setShowEditModal(false)}
+                                            saveChanges={() => {
+                                                setShowEditModal(false);
+                                                allEvents(orgId); // Refresh the events list after saving changes
+                                            }}
+                                        />
+                                    )}
                     </div>
 
                 </div>

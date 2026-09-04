@@ -68,7 +68,7 @@ export const getUserTicketsAPI = async (userID) => {
     return await commonAPI("GET", `/user/${userID}/tickets`, {})
 }
 
-// remove Tickets 
+// remove Tickets
 export const removeTicketAPI = async (ticketID) => {
     return await commonAPI("DELETE", `/remove/${ticketID}/ticket`, {})
 }
@@ -76,4 +76,18 @@ export const removeTicketAPI = async (ticketID) => {
 // get All Users
 export const getAllUsersAPI = async () => {
     return await commonAPI("GET", `/getAllUsers`, {})
+}
+
+export const getEventAPI = async (id) => {
+    return await commonAPI("GET", `/getEvent/${id}`,{});
+}
+
+// update event
+export const updateEventAPI = async (eventID, reqBody) => {
+    return await commonAPI("PUT", `/organizer/eventupdate/${eventID}`, reqBody);
+}
+
+// delete event
+export const deleteEventAPI = async (eventID) => {
+    return await commonAPI("DELETE", `/delete/${eventID}/event`, {});
 }

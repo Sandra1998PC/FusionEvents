@@ -233,14 +233,14 @@ const Login = () => {
 
             {/* Google */}
 
-            <button
+            {/* <button
               type="button"
               className="w-full py-4 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-100 transition"
             >
 
               Continue with Google
 
-            </button>
+            </button> */}
 
           </form>
 

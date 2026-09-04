@@ -9,7 +9,6 @@ const commonAPI = async (httpMethod, url, reqBody, reqHeader) => {
         data: reqBody,
         headers : reqHeader
     }
-    
     try {
         const response = await axiosInstance(reqConfig)
         return response

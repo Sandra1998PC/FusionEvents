@@ -38,7 +38,7 @@ const menuItems = [
   {
     name: "Profile",
     icon: User,
-    path: "/users/profile",
+    path: "/users/editprofile",
   },
 ];
 
