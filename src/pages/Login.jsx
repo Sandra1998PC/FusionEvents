@@ -18,37 +18,49 @@ const Login = () => {
       setError(true)
       return
     }
-    try{const result = await loginAPI(loginData)
-    console.log(result)
-    if (result.status == 200) {
-      Swal.fire({
-        title: "LogIn Successfull !!!",
-        icon: "success"
-      });
-      sessionStorage.setItem("user", JSON.stringify(result.data.existingUser))
-      sessionStorage.setItem("token", result.data.token)
-      if (result.data.existingUser.role == "Participant") {
-        navigate(`/users/${result.data.existingUser._id}/dashboard`)
+    try {
+      const result = await loginAPI(loginData)
+      console.log(result)
+      if (result.status == 200) {
+        Swal.fire({
+          title: "LogIn Successfull !!!",
+          icon: "success"
+        });
+        sessionStorage.setItem("user", JSON.stringify(result.data.existingUser))
+        sessionStorage.setItem("token", result.data.token)
+        if (result.data.existingUser.role == "Participant") {
+          navigate(`/users/${result.data.existingUser._id}/dashboard`)
+        }
+        else if (result.data.existingUser.role == "Organizer") {
+          navigate(`/organizer/${result.data.existingUser._id}/dashboard`)
+        }
+        else if (result.data.existingUser.role == "Admin") {
+          navigate(`/admin/${result.data.existingUser._id}/dashboard`)
+        }
       }
-      else if (result.data.existingUser.role == "Organizer") {
-        navigate(`/organizer/${result.data.existingUser._id}/dashboard`)
-      }
-      else if (result.data.existingUser.role == "Admin") {
-        navigate(`/admin/${result.data.existingUser._id}/dashboard`)
+      else {
+        Swal.fire({
+          title: "Something went Wrong !!!",
+          icon: "error"
+        });
       }
     }
-    else {
-      Swal.fire({
-        title: "Something went Wrong !!!",
-        icon: "error"
-      });
-    }}
-    catch(error){
-      console.log(error)
-       Swal.fire({
-        title: "Something went Wrong !!!",
-        icon: "error"
-      });
+    catch (error) {
+      if (error.response?.status === 409) {
+
+        Swal.fire({
+          title: "User Already Exists!",
+          text: error.response.data.message,
+          icon: "warning"
+        });
+
+      } else {
+
+        Swal.fire({
+          title: "Something Went Wrong !!!",
+          icon: "error"
+        });
+      }
     }
   }
   return (
@@ -205,9 +217,9 @@ const Login = () => {
 
             {/* Login */}
 
-            <button className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold flex justify-center 
+            <button className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold flex justify-center
             items-center gap-2 hover:scale-105 transition duration-300 shadow-[0_0_30px_rgba(34,211,238,.45)]"
-             type="submit">
+              type="submit">
 
               Login
 

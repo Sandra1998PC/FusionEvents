@@ -16,16 +16,23 @@ import { updateAdminAPI } from "../services/allAPIs";
 import axiosInstance from "../services/axiosInstance";
 
 export default function AdminProfile() {
-    const [profile, setProfile] = useState({})
+    const [profile, setProfile] = useState({username : "",
+            email: "",
+            phonenumber: "",
+            password: "",
+            location: "",
+            profileImage: ""})
     const [preview, setPreview] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [passwordMatchError, setPasswordMatchError] = useState(false)
+    const [role, setRole] = useState("")
     const navigate = useNavigate()
     useEffect(() => {
         const data = JSON.parse(sessionStorage.getItem("user"))
         console.log("data : ", data)
-        setProfile(data)
-        setConfirmPassword(data.password)
+        setProfile({...profile, username : data.username, email : data.email, phonenumber : data.phonenumber, location : data.location, profileImage : data.profileImage})
+        // setConfirmPassword(data.password)
+        setRole(data.role)
     }, [])
 
     const handleChange = (e) => {
@@ -60,7 +67,6 @@ export default function AdminProfile() {
             !username ||
             !email ||
             !phonenumber ||
-            !password ||
             !location
         ) {
             Swal.fire({
@@ -352,7 +358,7 @@ export default function AdminProfile() {
 
                                             <input
                                                 type="text"
-                                                value={profile.role}
+                                                value={role}
                                                 disabled
                                                 className="w-full bg-slate-800 border border-slate-700
                                                 rounded-xl px-4 py-3 text-slate-400 cursor-not-allowed"

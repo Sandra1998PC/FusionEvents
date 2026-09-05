@@ -103,30 +103,50 @@ const Register = () => {
         username: form.fullName, email: form.email,
         phonenumber: form.phone, password: form.password, role: form.role
       });
-      const result = await registerAPI({
-        username: form.fullName, email: form.email,
-        phonenumber: form.phone, password: form.password, role: form.role
-      })
-      console.log(result)
-      if (result.status == 201) {
-        Swal.fire({
-          title: "Registered Successfully !!!",
-          icon: "success"
+      try {
+        const result = await registerAPI({
+          username: form.fullName, email: form.email,
+          phonenumber: form.phone, password: form.password, role: form.role
         });
-        setForm({
-          fullName: "",
-          email: "",
-          phone: "",
-          password: "",
-          confirmPassword: "",
-          role: "Participant",
-        })
+        console.log(result);
+        if (result.status == 201) {
+          Swal.fire({
+            title: "Registered Successfully !!!",
+            icon: "success"
+          });
+          setForm({
+            fullName: "",
+            email: "",
+            phone: "",
+            password: "",
+            confirmPassword: "",
+            role: "Participant",
+          })
+        }
+        else {
+          Swal.fire({
+            title: "Something Went Wrong !!!",
+            icon: "error"
+          });
+        }
       }
-      else {
-        Swal.fire({
-          title: "Something Went Wrong !!!",
-          icon: "error"
-        });
+      catch (error) {
+
+        if (error.response?.status === 409) {
+
+          Swal.fire({
+            title: "User Already Exists!",
+            text: error.response.data.message,
+            icon: "warning"
+          });
+
+        } else {
+
+          Swal.fire({
+            title: "Something Went Wrong !!!",
+            icon: "error"
+          });
+        }
       }
     }
   };

@@ -59,6 +59,14 @@ export default function CreateEvent() {
         console.log("Organizer Name:", organizername);
         console.log("Organizer ID:", organizerId);
 
+        if(!organization) {
+            Swal.fire({
+                title: "Please Update Your Profile First!!!",
+                icon: "warning"
+            });
+            return;
+        }
+
         const {
             eventname,
             category,
@@ -346,7 +354,7 @@ export default function CreateEvent() {
                                         Banner Upload
                                     </label>
 
-                                    <label className="cursor-pointer flex flex-col items-center justify-center h-48 rounded-2xl 
+                                    <label className="cursor-pointer flex flex-col items-center justify-center h-48 rounded-2xl
                                      border-2 border-dashed border-cyan-500/30 hover:border-cyan-400 transition">
                                         {
                                             preview != "" ?

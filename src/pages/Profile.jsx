@@ -87,7 +87,6 @@ function Profile() {
             !username ||
             !email ||
             !phonenumber ||
-            !password ||
             !location ||
             !website ||
             !bio

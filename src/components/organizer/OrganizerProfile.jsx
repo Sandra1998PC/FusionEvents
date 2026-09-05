@@ -27,7 +27,8 @@ import { updateOrganizerAPI } from "../services/allAPIs";
 import Swal from "sweetalert2";
 
 export default function OrganizerProfile() {
-    const [profile, setProfile] = useState({})
+    const [profile, setProfile] = useState({username : "", email : "", phonenumber : "", password : "", role : "", location : "",
+         website : "", bio : "", profileImage : "", organization : ""})
     const [preview, setPreview] = useState("")
     const [confirmPassword, setConfirmPassword] = useState("")
     const [passwordMatchError, setPasswordMatchError] = useState(false)
@@ -43,8 +44,18 @@ export default function OrganizerProfile() {
     useEffect(() => {
         const data = JSON.parse(sessionStorage.getItem("user"))
         console.log("data : ", data)
-        setProfile(data)
-        setConfirmPassword(data.password)
+        setProfile({
+            ...profile,
+            username: data.username,
+            email: data.email,
+            phonenumber: data.phonenumber,
+            role: data.role,
+            location: data.location,
+            website: data.website,
+            bio: data.bio,
+            profileImage: data.profileImage,
+            organization: data.organization
+        })
     }, [])
 
     const handleFileUpload = (e) => {
@@ -75,7 +86,6 @@ export default function OrganizerProfile() {
             !username ||
             !email ||
             !phonenumber ||
-            !password ||
             !location ||
             !website ||
             !bio ||
@@ -114,7 +124,7 @@ export default function OrganizerProfile() {
         try {
             const result = await updateOrganizerAPI(reqBody);
             console.log("result : ",result);
-            
+
             if (result.status === 200) {
                 Swal.fire({
                     title: "Profile Updated Successfully !!!",
