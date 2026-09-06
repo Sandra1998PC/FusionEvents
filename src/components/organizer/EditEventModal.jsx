@@ -114,7 +114,6 @@ const EditEventModal = ({ event, onClose, saveChanges }) => {
         <div className="fixed inset-0 z-[9999]
                         flex items-center justify-center
                         bg-black/70 backdrop-blur-sm p-4">
-
             {/* Modal */}
             <div className="w-full max-w-4xl
                             h-[70vh]
@@ -569,6 +568,9 @@ const EditEventModal = ({ event, onClose, saveChanges }) => {
 
                                 <option value="Pending">
                                     Pending
+                                </option>
+                                <option value="Upcoming">
+                                    Upcoming
                                 </option>
 
                                 <option value="Completed">

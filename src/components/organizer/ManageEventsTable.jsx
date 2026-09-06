@@ -18,11 +18,15 @@ import EditEventModal from "./EditEventModal";
 
 const badgeColor = (status) => {
     switch (status) {
-        case "Live":
+        case "Active":
             return "bg-green-500/20 text-green-400 border-green-500/40";
 
         case "Upcoming":
             return "bg-cyan-500/20 text-cyan-400 border-cyan-500/40";
+        case "Completed":
+            return "bg-emerald-500/20 text-emerald-400 border-emerald-500/40";
+        case "Cancelled":
+            return "bg-rose-500/20 text-rose-400 border-rose-500/40";
 
         default:
             return "bg-slate-700/40 text-slate-300 border-slate-600";
@@ -100,6 +104,27 @@ export default function ManageEventsTable() {
             <main className="flex-1 lg:ml-72">
 
                 <OrganizerHeader />
+                {showModal && (
+                                        <ViewEventModal
+                                            event={selectedEvent}
+                                            onClose={() => {
+                                                setShowModal(false);
+                                                setSelectedEvent(null);
+                                            }}
+                                        />
+                                    )}
+
+
+                                    {showEditModal && (
+                                        <EditEventModal
+                                            event={selectedEvent}
+                                            onClose={() => setShowEditModal(false)}
+                                            saveChanges={() => {
+                                                setShowEditModal(false);
+                                                allEvents(orgId); // Refresh the events list after saving changes
+                                            }}
+                                        />
+                                    )}
 
                 <div className="p-8">
 
@@ -117,7 +142,7 @@ export default function ManageEventsTable() {
 
                         <div className="overflow-x-auto">
 
-                            <table className="w-full">
+                            <table className="w-full h">
 
                                 <thead className="bg-slate-800/60 text-slate-300">
 
@@ -273,32 +298,12 @@ export default function ManageEventsTable() {
 
                                     ))}
 
-                                    {showModal && (
-                                        <ViewEventModal
-                                            event={selectedEvent}
-                                            onClose={() => {
-                                                setShowModal(false);
-                                                setSelectedEvent(null);
-                                            }}
-                                        />
-                                    )}
-
 
                                 </tbody>
 
                             </table>
 
                         </div>
-                                    {showEditModal && (
-                                        <EditEventModal
-                                            event={selectedEvent}
-                                            onClose={() => setShowEditModal(false)}
-                                            saveChanges={() => {
-                                                setShowEditModal(false);
-                                                allEvents(orgId); // Refresh the events list after saving changes
-                                            }}
-                                        />
-                                    )}
                     </div>
 
                 </div>

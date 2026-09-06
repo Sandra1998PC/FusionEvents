@@ -28,12 +28,10 @@ function AdminHeader() {
 
             <div className="flex items-center gap-5">
 
-                <button className="w-48 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white">
-
-                    {/* <Bell className="text-yellow-400" /> */}
+                {/* <button className="w-48 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white">
                     Notifications
 
-                </button>
+                </button> */}
 
                 {/* <UserCircle
                     className="text-cyan-400"

@@ -53,12 +53,10 @@ export default function OrganizerHeader() {
 
                 </div> */}
 
-                <button className="w-48 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white">
-
-                    {/* <Bell className="text-yellow-400" /> */}
+                {/* <button className="w-48 h-12 rounded-xl bg-white/5 flex items-center justify-center text-white">
                     Notifications
 
-                </button>
+                </button> */}
 
                 <img
           src= {organizerData?.profileImage != "" ? `${axiosInstance.defaults.baseURL}/uploads/${organizerData?.profileImage}` : "https://cdn.pixabay.com/photo/2023/02/18/11/00/icon-7797704_1280.png"}

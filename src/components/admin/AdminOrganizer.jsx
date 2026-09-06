@@ -14,7 +14,7 @@ const badgeColor = (status) => {
         case "Pending":
             return "bg-yellow-500/20 text-yellow-400";
 
-        case "Blocked":
+        case "Cancelled":
             return "bg-red-500/20 text-red-400";
 
         case "Live":
@@ -32,12 +32,12 @@ const iconBtn =
     "p-2 rounded-lg transition hover:bg-slate-700 hover:text-cyan-400";
 
 function AdminOrganizer() {
-    const [events,setEvents] = useState([]) 
+    const [events,setEvents] = useState([])
     const allEvents = async () => {
             try {
                         const result = await getAllEvents()
                         console.log(result);
-                        
+
                         if (result.status == 200) {
                             setEvents(result.data)
                         }
