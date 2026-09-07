@@ -36,28 +36,21 @@ const TopBar = () => {
           />
 
         </div>
-     
         {/* Right Side */}
 
         <div className="flex items-center gap-6">
 
           {/* Notification */}
 
-          <button className="relative z-20 w-36 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,.35)] transition">
-
-            {/* <Bell size={22} className="text-yellow-500 w-5 h-5"/> */}
-            {/* < BsBellFill className="text-yellow-500 w-25 h-10" /> */}
+          {/* <button className="relative z-20 w-36 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-[0_0_20px_rgba(34,211,238,.35)] transition">
             Notification
-           
-            {/* Notification Badge */}
-
             <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center font-semibold">
 
               3
 
             </span>
 
-          </button>
+          </button> */}
 
           {/* Profile */}
 
