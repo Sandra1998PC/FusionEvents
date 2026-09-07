@@ -116,7 +116,7 @@ const EditEventModal = ({ event, onClose, saveChanges }) => {
                         bg-black/70 backdrop-blur-sm p-4">
             {/* Modal */}
             <div className="w-full max-w-4xl
-                            h-[70vh]
+                            h-[90vh]
                             bg-[#0f0f1a]
                             rounded-2xl
                             border border-cyan-500/20

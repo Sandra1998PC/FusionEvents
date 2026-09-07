@@ -19,7 +19,7 @@ const ViewEventModal = ({ event, onClose }) => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
 
             {/* Modal */}
-            <div className="w-full max-w-4xl h-[70vh] flex flex-col rounded-2xl bg-[#0f0f1a] border border-cyan-500/20 shadow-2xl overflow-hidden">
+            <div className="w-full max-w-4xl h-[90vh] flex flex-col rounded-2xl bg-[#0f0f1a] border border-cyan-500/20 shadow-2xl overflow-hidden">
 
                 {/* Header */}
                 <div className="flex-shrink-0 flex items-center justify-between px-6 py-4 bg-[#11111f] border-b border-gray-700">

@@ -91,3 +91,16 @@ export const updateEventAPI = async (eventID, reqBody) => {
 export const deleteEventAPI = async (eventID) => {
     return await commonAPI("DELETE", `/delete/${eventID}/event`, {});
 }
+
+export const updateEventStatusAPI = async (id, status) => {
+    return await commonAPI("PUT",`/updateEventStatus/${id}`,{ status });
+};
+
+export const updateUserStatusAPI = async (id, status) => {
+    return await commonAPI("PUT",`/updateUserStatus/${id}`,{ status });
+};
+
+// delete user
+export const deleteUserAPI = async (userID) => {
+    return await commonAPI("DELETE", `/delete/${userID}/user`, {});
+}

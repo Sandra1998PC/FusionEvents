@@ -2,27 +2,17 @@ import React, { useEffect, useState } from "react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import AdminSidebar from "./AdminSidebar";
 import AdminHeader from "./AdminHeader";
-import { getAllUsersAPI } from "../services/allAPIs";
+import { deleteUserAPI, getAllUsersAPI, updateUserStatusAPI } from "../services/allAPIs";
 import Swal from "sweetalert2";
+import ViewUserModal from "./ViewUserModal";
+import UserApprovalModal from "./UserApprovalModal";
 
 const badgeColor = (status) => {
     switch (status) {
-        case "Active":
-        case "Upcoming":
-            return "bg-emerald-500/20 text-emerald-400";
-
-        case "Pending":
-            return "bg-yellow-500/20 text-yellow-400";
-
+        case "Verified":
+            return "bg-green-500/20 text-green-400";
         case "Blocked":
             return "bg-red-500/20 text-red-400";
-
-        case "Live":
-            return "bg-cyan-500/20 text-cyan-400";
-
-        case "Completed":
-            return "bg-purple-500/20 text-purple-400";
-
         default:
             return "bg-slate-500/20 text-slate-300";
     }
@@ -33,6 +23,22 @@ const iconBtn =
 
 function AdminTables() {
     const [users, setUsers] = useState([])
+    const [id, setId] = useState(null)
+    const [selectedUser, setSelectedUser] = useState(null);
+    const [showUserModal, setShowUserModal] = useState(false);
+    const [showApprovalModal, setShowApprovalModal] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const usersPerPage = 5;
+
+    const handleViewUser = (user) => {
+        setSelectedUser(user);
+        setShowUserModal(true);
+    };
+
+    const handleEditUser = (user) => {
+        setSelectedUser(user);
+        setShowApprovalModal(true);
+    };
 
     const getAllUserData = async () => {
         try {
@@ -55,7 +61,75 @@ function AdminTables() {
         }
 
     }
+
+    const handleStatusUpdate = async (userId, status) => {
+        try {
+            const result = await updateUserStatusAPI(userId, status);
+            if (result.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Status Updated",
+                    text: `User has been ${status.toLowerCase()}.`,
+                    timer: 1500,
+                    showConfirmButton: false
+                });
+                setShowApprovalModal(false);
+                getAllUserData();
+            }
+        } catch (error) {
+            console.log(error);
+            Swal.fire({
+                icon: "error",
+                title: "Update Failed",
+                text: "Unable to update user status."
+            });
+        }
+    };
+
+    const deleteUser = async (userID) => {
+            try{
+                const deleteResult = await deleteUserAPI(userID);
+                console.log("Delete API Result:", deleteResult);
+                if (deleteResult.status === 200) {
+                    Swal.fire({
+                        title: "User Deleted Successfully",
+                        icon: "success"
+                    });
+                    getAllUserData(); // Refresh the users list after deletion
+                } else {
+                    Swal.fire({
+                        title: "Something Went Wrong !!!",
+                        icon: "error"
+                    });
+                }
+
+            }catch (error) {
+                console.log("API Error:", error);
+                Swal.fire({
+                    title: "Something Went Wrong !!!",
+                    icon: "error"
+                });
+            }
+        }
+
+    const totalPages = Math.ceil((users.length - 1) / usersPerPage);
+
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+
+    const currentUsers = users.filter(data => data._id !== id).slice(
+        indexOfFirstUser,
+        indexOfLastUser
+    );
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
     useEffect(() => {
+        const data = JSON.parse(sessionStorage.getItem("user"))
+        console.log("data : ", data)
+        setId(data._id)
         getAllUserData()
     }, [])
     return (
@@ -68,6 +142,20 @@ function AdminTables() {
                 <AdminHeader />
 
                 <div className="p-8">
+                    {showUserModal && (
+                        <ViewUserModal
+                            user={selectedUser}
+                            onClose={() => setShowUserModal(false)}
+                        />
+                    )}
+
+                    {showApprovalModal && (
+                        <UserApprovalModal
+                            user={selectedUser}
+                            onClose={() => setShowApprovalModal(false)}
+                            onStatusUpdate={handleStatusUpdate}
+                        />
+                    )}
 
                     <div className="min-h-screen bg-[#020617] text-white p-8">
 
@@ -83,9 +171,9 @@ function AdminTables() {
                                         Users
                                     </h2>
 
-                                    <button className="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold transition">
+                                    {/* <button className="px-5 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold transition">
                                         View All
-                                    </button>
+                                    </button> */}
 
                                 </div>
 
@@ -115,7 +203,7 @@ function AdminTables() {
 
                                         <tbody>
 
-                                            {users.filter(item => item.role != "Admin").map((user) => (
+                                            {currentUsers.map((user) => (
 
                                                 <tr
                                                     key={user._id}
@@ -149,15 +237,15 @@ function AdminTables() {
 
                                                         <div className="flex justify-center gap-3">
 
-                                                            <button className={iconBtn}>
+                                                            <button className={iconBtn} onClick={() => handleViewUser(user)}>
                                                                 <Eye size={18} />
                                                             </button>
 
-                                                            <button className={iconBtn}>
+                                                            <button className={iconBtn} onClick={() => handleEditUser(user)}>
                                                                 <Pencil size={18} />
                                                             </button>
 
-                                                            <button className="p-2 rounded-lg hover:bg-red-500/20 hover:text-red-400 transition">
+                                                            <button className="p-2 rounded-lg hover:bg-red-500/20 hover:text-red-400 transition" onClick={() => deleteUser(user._id)}>
                                                                 <Trash2 size={18} />
                                                             </button>
 
@@ -172,6 +260,63 @@ function AdminTables() {
                                         </tbody>
 
                                     </table>
+                                    <div className="flex items-center justify-between border-t border-slate-800 px-6 py-4">
+
+                                        {/* Showing information */}
+                                        <p className="text-sm text-slate-400">
+                                            Showing{" "}
+                                            <span className="text-white font-medium">
+                                                {users.length === 0 ? 0 : indexOfFirstUser + 1}
+                                            </span>
+                                            {" "}to{" "}
+                                            <span className="text-white font-medium">
+                                                {Math.min(indexOfLastUser, users.length)}
+                                            </span>
+                                            {" "}of{" "}
+                                            <span className="text-white font-medium">
+                                                {users.length - 1}
+                                            </span>
+                                            {" "}users
+                                        </p>
+
+                                        {/* Pagination */}
+                                        <div className="flex items-center gap-2">
+
+                                            {/* Previous */}
+                                            <button
+                                                onClick={() => setCurrentPage(currentPage - 1)}
+                                                disabled={currentPage === 1}
+                                                className="px-3 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                                            >
+                                                Previous
+                                            </button>
+
+                                            {/* Page Numbers */}
+                                            {Array.from({ length: totalPages }, (_, index) => (
+                                                <button
+                                                    key={index + 1}
+                                                    onClick={() => handlePageChange(index + 1)}
+                                                    className={`w-9 h-9 rounded-lg transition ${currentPage === index + 1
+                                                        ? "bg-cyan-500 text-white"
+                                                        : "border border-slate-700 text-slate-300 hover:bg-slate-800"
+                                                        }`}
+                                                >
+                                                    {index + 1}
+                                                </button>
+                                            ))}
+
+                                            {/* Next */}
+                                            <button
+                                                onClick={() => setCurrentPage(currentPage + 1)}
+                                                disabled={currentPage === totalPages || totalPages === 0}
+                                                className="px-3 py-2 rounded-lg border border-slate-700 text-slate-300 hover:bg-slate-800 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                                            >
+                                                Next
+                                            </button>
+
+                                        </div>
+
+                                    </div>
 
                                 </div>
 
