@@ -92,7 +92,7 @@ export default function Ticket() {
                                             <TicketCard data={item} />
                                         </div>
 
-                                        <TicketActions data={item} />
+                                        <TicketActions data={item} onDelete={getTickets} />
 
                                     </div>
                                 ))

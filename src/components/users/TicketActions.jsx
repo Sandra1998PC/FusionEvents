@@ -6,16 +6,17 @@ import {
 import Swal from "sweetalert2";
 import { removeTicketAPI } from "../services/allAPIs";
 
-export default function TicketActions({ data }) {
+export default function TicketActions({ data , onDelete}) {
   const cancelTicket = async () => {
     try {
       const result = await removeTicketAPI(data._id)
-      
+
       if (result.status == 200) {
         Swal.fire({
           title: "Ticket Canceled Successfully",
           icon: "success"
         });
+        onDelete()
       }
       else {
         Swal.fire({
