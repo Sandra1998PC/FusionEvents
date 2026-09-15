@@ -52,7 +52,7 @@ const Login = () => {
       if (error.response?.status === 409) {
 
         Swal.fire({
-          title: "User Already Exists!",
+          title: "",
           text: error.response.data.message,
           icon: "warning"
         });
