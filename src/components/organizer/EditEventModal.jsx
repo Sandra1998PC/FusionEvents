@@ -13,6 +13,7 @@ import eventDetails from "../../assets/eventDetails.png";
 import axiosInstance from "../services/axiosInstance";
 import Swal from "sweetalert2";
 import { updateEventAPI } from "../services/allAPIs";
+import Loader from "../../pages/Loader";
 
 const EditEventModal = ({ event, onClose, saveChanges }) => {
 
@@ -28,6 +29,7 @@ const EditEventModal = ({ event, onClose, saveChanges }) => {
         status: event?.status || "Active",
         bannerImage: event?.bannerImage || ""
     });
+    const [loader,setLoader] = useState(false)
 
     console.log("Initial Form Data:", event);
 
@@ -83,6 +85,7 @@ const EditEventModal = ({ event, onClose, saveChanges }) => {
         for (let pair of reqBody.entries()) {
             console.log(pair[0], pair[1]);
         }
+        setLoader(true)
         try {
             const result = await updateEventAPI(event._id, reqBody);
             console.log("Update Result:", result);
@@ -106,6 +109,7 @@ const EditEventModal = ({ event, onClose, saveChanges }) => {
                 icon: "error"
             });
         }
+        setLoader(false)
     };
 
 
@@ -114,8 +118,8 @@ const EditEventModal = ({ event, onClose, saveChanges }) => {
         <div className="fixed inset-0 z-[9999]
                         flex items-center justify-center
                         bg-black/70 backdrop-blur-sm p-4">
-            {/* Modal */}
-            <div className="w-full max-w-4xl
+            {loader ? (<Loader/>) :
+            (<div className="w-full max-w-4xl
                             h-[90vh]
                             bg-[#0f0f1a]
                             rounded-2xl
@@ -634,8 +638,7 @@ const EditEventModal = ({ event, onClose, saveChanges }) => {
 
                 </form>
 
-            </div>
-
+            </div>)}
         </div>
     );
 };

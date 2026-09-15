@@ -11,6 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import regBg from "../assets/RegBg.png"
 import { registerAPI } from "../components/services/allAPIs";
 import Swal from "sweetalert2";
+import Loader from "./Loader";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -25,6 +26,7 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [passwordMatchError, setPasswordMatchError] = useState(false)
   const navigate = useNavigate()
+  const [isLoader, setIsLoader] = useState(false)
 
   const handleChange = (e) => {
     setForm({
@@ -103,6 +105,7 @@ const Register = () => {
         username: form.fullName, email: form.email,
         phonenumber: form.phone, password: form.password, role: form.role
       });
+      setIsLoader(true)
       try {
         const result = await registerAPI({
           username: form.fullName, email: form.email,
@@ -148,6 +151,7 @@ const Register = () => {
           });
         }
       }
+      setIsLoader(false)
     }
   };
 
@@ -185,177 +189,181 @@ const Register = () => {
       <div className="absolute right-0 bottom-0 w-96 h-96 bg-violet-600/20 blur-[150px] rounded-full"></div>
 
       {/* Card */}
+      {isLoader ? (
+        <Loader />
+      ) : (
+        <div className="relative w-full max-w-lg mx-5 animate-[fadeIn_.8s_ease]">
 
-      <div className="relative w-full max-w-lg mx-5 animate-[fadeIn_.8s_ease]">
+          <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-[0_0_50px_rgba(124,58,237,.25)]">
 
-        <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-10 shadow-[0_0_50px_rgba(124,58,237,.25)]">
+            {/* Logo */}
 
-          {/* Logo */}
+            <div className="text-center mb-10">
 
-          <div className="text-center mb-10">
+              <h1 className="text-4xl font-bold">
 
-            <h1 className="text-4xl font-bold">
+                <span className="text-cyan-400">
+                  Fusion
+                </span>
 
-              <span className="text-cyan-400">
-                Fusion
-              </span>
+                <span className="text-violet-500">
+                  Events
+                </span>
 
-              <span className="text-violet-500">
-                Events
-              </span>
+              </h1>
 
-            </h1>
+              <h2 className="text-3xl font-bold text-white mt-5">
 
-            <h2 className="text-3xl font-bold text-white mt-5">
+                Create Account
 
-              Create Account
+              </h2>
 
-            </h2>
-
-            <p className="text-slate-400 mt-2">
-              Join FusionEvents today.
-            </p>
-
-          </div>
-
-          <form
-            onSubmit={handleSubmit}
-            className="space-y-5"
-          >
-
-            {/* Name */}
-
-            <Input
-              icon={<User />}
-              name="fullName"
-              placeholder="Full Name"
-              value={form.fullName}
-              onChange={handleChange}
-              error={errors.fullName}
-            />
-
-            {/* Email */}
-
-            <Input
-              icon={<Mail />}
-              name="email"
-              placeholder="Email"
-              value={form.email}
-              onChange={handleChange}
-              error={errors.email}
-            />
-
-            {/* Phone */}
-
-            <Input
-              icon={<Phone />}
-              name="phone"
-              placeholder="Phone Number"
-              value={form.phone}
-              onChange={handleChange}
-              error={errors.phone}
-            />
-
-            {/* Password */}
-
-            <Input
-              icon={<Lock />}
-              name="password"
-              type="password"
-              placeholder="Password"
-              value={form.password}
-              onChange={handleChange}
-              error={errors.password}
-            />
-
-            {/* Confirm */}
-
-            <Input
-              icon={<Eye />}
-              name="confirmPassword"
-              type="password"
-              placeholder="Confirm Password"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              error={errors.confirmPassword}
-            />
-
-            {/* Role */}
-
-            {passwordMatchError && (
-              <p className="mt-3 text-yellow-600 text-sm text-center">
-                Password and confirm password must be same
+              <p className="text-slate-400 mt-2">
+                Join FusionEvents today.
               </p>
-            )}
-
-
-            <div>
-
-              <label className="text-white mb-3 block">
-                Select Role
-              </label>
-
-              <div className="grid grid-cols-2 gap-4">
-
-                {["Participant", "Organizer"].map(
-                  (role) => (
-
-                    <label
-                      key={role}
-                      className={`cursor-pointer py-4 rounded-xl border text-center transition ${form.role === role
-                        ? "border-cyan-400 bg-cyan-400/10 text-cyan-400"
-                        : "border-white/10 text-slate-300"
-                        }`}
-                    >
-
-                      <input
-                        type="radio"
-                        name="role"
-                        value={role}
-                        checked={form.role === role}
-                        onChange={handleChange}
-                        hidden
-                      />
-
-                      {role}
-
-                    </label>
-
-                  )
-                )}
-
-              </div>
 
             </div>
 
-            {/* Button */}
-
-            <button
-              type="submit"
-              className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold flex justify-center items-center gap-2 hover:scale-105 transition shadow-[0_0_30px_rgba(34,211,238,.45)]"
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-5"
             >
 
-              Create Account
+              {/* Name */}
 
-              <ArrowRight size={20} />
+              <Input
+                icon={<User />}
+                name="fullName"
+                placeholder="Full Name"
+                value={form.fullName}
+                onChange={handleChange}
+                error={errors.fullName}
+              />
 
-            </button>
+              {/* Email */}
 
-            <p className="text-center text-slate-400">
+              <Input
+                icon={<Mail />}
+                name="email"
+                placeholder="Email"
+                value={form.email}
+                onChange={handleChange}
+                error={errors.email}
+              />
 
-              Already have an account?
+              {/* Phone */}
 
-              <Link className="text-cyan-400 ml-2 cursor-pointer" to={"/login"}>
-                Login
-              </Link>
+              <Input
+                icon={<Phone />}
+                name="phone"
+                placeholder="Phone Number"
+                value={form.phone}
+                onChange={handleChange}
+                error={errors.phone}
+              />
 
-            </p>
+              {/* Password */}
 
-          </form>
+              <Input
+                icon={<Lock />}
+                name="password"
+                type="password"
+                placeholder="Password"
+                value={form.password}
+                onChange={handleChange}
+                error={errors.password}
+              />
+
+              {/* Confirm */}
+
+              <Input
+                icon={<Eye />}
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm Password"
+                value={form.confirmPassword}
+                onChange={handleChange}
+                error={errors.confirmPassword}
+              />
+
+              {/* Role */}
+
+              {passwordMatchError && (
+                <p className="mt-3 text-yellow-600 text-sm text-center">
+                  Password and confirm password must be same
+                </p>
+              )}
+
+
+              <div>
+
+                <label className="text-white mb-3 block">
+                  Select Role
+                </label>
+
+                <div className="grid grid-cols-2 gap-4">
+
+                  {["Participant", "Organizer"].map(
+                    (role) => (
+
+                      <label
+                        key={role}
+                        className={`cursor-pointer py-4 rounded-xl border text-center transition ${form.role === role
+                          ? "border-cyan-400 bg-cyan-400/10 text-cyan-400"
+                          : "border-white/10 text-slate-300"
+                          }`}
+                      >
+
+                        <input
+                          type="radio"
+                          name="role"
+                          value={role}
+                          checked={form.role === role}
+                          onChange={handleChange}
+                          hidden
+                        />
+
+                        {role}
+
+                      </label>
+
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+              {/* Button */}
+
+              <button
+                type="submit"
+                className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold flex justify-center items-center gap-2 hover:scale-105 transition shadow-[0_0_30px_rgba(34,211,238,.45)]"
+              >
+
+                Create Account
+
+                <ArrowRight size={20} />
+
+              </button>
+
+              <p className="text-center text-slate-400">
+
+                Already have an account?
+
+                <Link className="text-cyan-400 ml-2 cursor-pointer" to={"/login"}>
+                  Login
+                </Link>
+
+              </p>
+
+            </form>
+
+          </div>
 
         </div>
+      )}
 
-      </div>
 
     </section>
   );

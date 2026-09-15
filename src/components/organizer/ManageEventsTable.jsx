@@ -13,6 +13,7 @@ import Swal from "sweetalert2";
 import { deleteEventAPI, getEventAPI } from "../services/allAPIs";
 import ViewEventModal from "./ViewEventModal";
 import EditEventModal from "./EditEventModal";
+import Loader from "../../pages/Loader";
 
 
 
@@ -39,8 +40,10 @@ export default function ManageEventsTable() {
     const [selectedEvent, setSelectedEvent] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
+    const [loader, setLoader] = useState(false)
 
     const allEvents = async (id) => {
+        setLoader(true)
         try {
             const result = await getEventAPI(id);
             console.log("API Result:", result);
@@ -59,10 +62,12 @@ export default function ManageEventsTable() {
                 icon: "error"
             });
         }
+        setLoader(false)
     };
 
     const deleteEvent = async (eventID) => {
-        try{
+        setLoader(true)
+        try {
             const deleteResult = await deleteEventAPI(eventID);
             console.log("Delete API Result:", deleteResult);
             if (deleteResult.status === 200) {
@@ -78,13 +83,14 @@ export default function ManageEventsTable() {
                 });
             }
 
-        }catch (error) {
+        } catch (error) {
             console.log("API Error:", error);
             Swal.fire({
                 title: "Something Went Wrong !!!",
                 icon: "error"
             });
         }
+        setLoader(false)
     }
 
     useEffect(() => {
@@ -100,83 +106,83 @@ export default function ManageEventsTable() {
         <div className="flex bg-slate-950 min-h-screen">
 
             <OrganizerSidebar />
+            {loader ? (<Loader />) :
+                (<main className="flex-1 lg:ml-72">
 
-            <main className="flex-1 lg:ml-72">
-
-                <OrganizerHeader />
-                {showModal && (
-                                        <ViewEventModal
-                                            event={selectedEvent}
-                                            onClose={() => {
-                                                setShowModal(false);
-                                                setSelectedEvent(null);
-                                            }}
-                                        />
-                                    )}
+                    <OrganizerHeader />
+                    {showModal && (
+                        <ViewEventModal
+                            event={selectedEvent}
+                            onClose={() => {
+                                setShowModal(false);
+                                setSelectedEvent(null);
+                            }}
+                        />
+                    )}
 
 
-                                    {showEditModal && (
-                                        <EditEventModal
-                                            event={selectedEvent}
-                                            onClose={() => setShowEditModal(false)}
-                                            saveChanges={() => {
-                                                setShowEditModal(false);
-                                                allEvents(orgId); // Refresh the events list after saving changes
-                                            }}
-                                        />
-                                    )}
+                    {showEditModal && (
+                        <EditEventModal
+                            event={selectedEvent}
+                            onClose={() => setShowEditModal(false)}
+                            saveChanges={() => {
+                                setShowEditModal(false);
+                                allEvents(orgId); // Refresh the events list after saving changes
+                            }}
+                        />
+                    )}
 
-                <div className="p-8">
+                    <div className="p-8">
 
-                    <div className="bg-slate-900/70 backdrop-blur-xl rounded-3xl border border-cyan-500/20 mt-10 overflow-hidden">
+                        <div className="bg-slate-900/70 backdrop-blur-xl rounded-3xl border border-cyan-500/20 mt-10 overflow-hidden">
 
-                        <div className="flex items-center justify-between p-6 border-b border-slate-700">
-                            <h2 className="text-2xl font-bold text-white">
-                                Manage Events
-                            </h2>
+                            <div className="flex items-center justify-between p-6 border-b border-slate-700">
+                                <h2 className="text-2xl font-bold text-white">
+                                    Manage Events
+                                </h2>
 
-                            <span className="text-slate-400">
-                                {events.length} Events
-                            </span>
-                        </div>
+                                <span className="text-slate-400">
+                                    {events.length} Events
+                                </span>
+                            </div>
 
-                        <div className="overflow-x-auto">
+                            <div className="overflow-x-auto">
 
-                            <table className="w-full h">
+                                <table className="w-full h">
 
-                                <thead className="bg-slate-800/60 text-slate-300">
+                                    <thead className="bg-slate-800/60 text-slate-300">
 
-                                    <tr>
+                                        <tr>
 
-                                        {/* <th className="px-6 py-4 text-left">Image</th> */}
+                                            {/* <th className="px-6 py-4 text-left">Image</th> */}
 
-                                        <th className="px-6 py-4 text-left">Title</th>
+                                            <th className="px-6 py-4 text-left">Title</th>
 
-                                        <th className="px-6 py-4 text-left">Date</th>
+                                            <th className="px-6 py-4 text-left">Date</th>
 
-                                        <th className="px-6 py-4 text-left">Venue</th>
+                                            <th className="px-6 py-4 text-left">Venue</th>
 
-                                        <th className="px-6 py-4 text-center">Participants</th>
+                                            <th className="px-6 py-4 text-center">Participants</th>
 
-                                        <th className="px-6 py-4 text-center">Status</th>
+                                            <th className="px-6 py-4 text-center">Status</th>
 
-                                        <th className="px-6 py-4 text-center">Actions</th>
+                                            <th className="px-6 py-4 text-center">Actions</th>
 
-                                    </tr>
+                                        </tr>
 
-                                </thead>
+                                    </thead>
 
-                                <tbody>
+                                    <tbody>
 
-                                    {events.map((event) => (
+                                        {events.map((event) => (
 
-                                        <tr
-                                            key={event.id}
-                                            className="border-t border-slate-800 hover:bg-slate-800/50 transition"
-                                        >
-                                            {/* Image */}
+                                            <tr
+                                                key={event.id}
+                                                className="border-t border-slate-800 hover:bg-slate-800/50 transition"
+                                            >
+                                                {/* Image */}
 
-                                            {/* <td className="px-6 py-4">
+                                                {/* <td className="px-6 py-4">
 
                                                 <img
                                                     src={event.image}
@@ -186,130 +192,130 @@ export default function ManageEventsTable() {
 
                                             </td> */}
 
-                                            {/* Title */}
+                                                {/* Title */}
 
-                                            <td className="px-6 py-4">
+                                                <td className="px-6 py-4">
 
-                                                <h3 className="font-semibold text-white">
-                                                    {event.eventname}
-                                                </h3>
+                                                    <h3 className="font-semibold text-white">
+                                                        {event.eventname}
+                                                    </h3>
 
-                                            </td>
+                                                </td>
 
-                                            {/* Date */}
+                                                {/* Date */}
 
-                                            <td className="px-6 py-4 w-50">
+                                                <td className="px-6 py-4 w-50">
 
-                                                <div className="flex items-center gap-2 text-slate-300">
+                                                    <div className="flex items-center gap-2 text-slate-300">
 
-                                                    <Calendar size={16} className="text-cyan-400" />
+                                                        <Calendar size={16} className="text-cyan-400" />
 
-                                                    {event.date}
+                                                        {event.date}
 
-                                                </div>
+                                                    </div>
 
-                                            </td>
+                                                </td>
 
-                                            {/* Venue */}
+                                                {/* Venue */}
 
-                                            <td className="px-6 py-4 w-75">
+                                                <td className="px-6 py-4 w-75">
 
-                                                <div className="flex items-center gap-2 text-slate-300">
+                                                    <div className="flex items-center gap-2 text-slate-300">
 
-                                                    <MapPin size={16} className="text-cyan-400" />
+                                                        <MapPin size={16} className="text-cyan-400" />
 
-                                                    {event.venue}
+                                                        {event.venue}
 
-                                                </div>
+                                                    </div>
 
-                                            </td>
+                                                </td>
 
-                                            {/* Participants */}
+                                                {/* Participants */}
 
-                                            <td className="px-6 py-4 text-center">
+                                                <td className="px-6 py-4 text-center">
 
-                                                <div className="flex justify-center items-center gap-2">
+                                                    <div className="flex justify-center items-center gap-2">
 
-                                                    <Users size={16} className="text-cyan-400" />
+                                                        <Users size={16} className="text-cyan-400" />
 
-                                                    <span className="text-white">
-                                                        {event.participants}
+                                                        <span className="text-white">
+                                                            {event.participants}
+                                                        </span>
+
+                                                    </div>
+
+                                                </td>
+
+                                                {/* Status */}
+
+                                                <td className="px-6 py-4 text-center">
+
+                                                    <span
+                                                        className={`px-4 py-2 rounded-full text-sm border ${badgeColor(
+                                                            event.status
+                                                        )}`}
+                                                    >
+                                                        {event.status}
                                                     </span>
 
-                                                </div>
+                                                </td>
 
-                                            </td>
+                                                {/* Actions */}
 
-                                            {/* Status */}
+                                                <td className="px-6 py-4">
 
-                                            <td className="px-6 py-4 text-center">
+                                                    <div className="flex justify-center gap-3">
 
-                                                <span
-                                                    className={`px-4 py-2 rounded-full text-sm border ${badgeColor(
-                                                        event.status
-                                                    )}`}
-                                                >
-                                                    {event.status}
-                                                </span>
+                                                        <button
+                                                            className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500 hover:text-white transition"
+                                                            title="View"
+                                                            onClick={() => {
+                                                                setSelectedEvent(event);
+                                                                setShowModal(true);
+                                                            }}
+                                                        >
+                                                            <Eye size={18} className="mx-auto" />
+                                                        </button>
 
-                                            </td>
+                                                        <button
+                                                            className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500 hover:text-white transition"
+                                                            title="Edit"
+                                                            onClick={() => {
+                                                                setSelectedEvent(event);
+                                                                setShowEditModal(true);
+                                                            }}
+                                                        >
+                                                            <Pencil size={18} className="mx-auto" />
+                                                        </button>
 
-                                            {/* Actions */}
+                                                        <button
+                                                            className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition"
+                                                            title="Delete"
+                                                            onClick={() => deleteEvent(event._id)}
+                                                        >
+                                                            <Trash2 size={18} className="mx-auto" />
+                                                        </button>
 
-                                            <td className="px-6 py-4">
+                                                    </div>
 
-                                                <div className="flex justify-center gap-3">
+                                                </td>
 
-                                                    <button
-                                                        className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500 hover:text-white transition"
-                                                        title="View"
-                                                        onClick={() => {
-                                                            setSelectedEvent(event);
-                                                            setShowModal(true);
-                                                        }}
-                                                    >
-                                                        <Eye size={18} className="mx-auto" />
-                                                    </button>
+                                            </tr>
 
-                                                    <button
-                                                        className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/30 text-yellow-400 hover:bg-yellow-500 hover:text-white transition"
-                                                        title="Edit"
-                                                        onClick={() => {
-                                                            setSelectedEvent(event);
-                                                            setShowEditModal(true);
-                                                        }}
-                                                    >
-                                                        <Pencil size={18} className="mx-auto" />
-                                                    </button>
-
-                                                    <button
-                                                        className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white transition"
-                                                        title="Delete"
-                                                        onClick={() => deleteEvent(event._id)}
-                                                    >
-                                                        <Trash2 size={18} className="mx-auto" />
-                                                    </button>
-
-                                                </div>
-
-                                            </td>
-
-                                        </tr>
-
-                                    ))}
+                                        ))}
 
 
-                                </tbody>
+                                    </tbody>
 
-                            </table>
+                                </table>
 
+                            </div>
                         </div>
+
                     </div>
 
-                </div>
-
-            </main>
-
+                </main>)
+            }
         </div>
     );
 }

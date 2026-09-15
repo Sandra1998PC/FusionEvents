@@ -11,6 +11,7 @@ import sarah from '../assets/Sarah.png'
 import { useNavigate, useParams } from 'react-router-dom';
 import { viewEventAPI } from '../components/services/allAPIs';
 import Swal from 'sweetalert2';
+import Loader from './Loader';
 
 const speakers = [
     {
@@ -33,10 +34,11 @@ function EventDetails() {
     const idObj = useParams()
     const [eventData, setEventData] = useState({})
     const navigate = useNavigate()
-    const [eventDetails, setEventDetails] = useState({date : "",time : "",venue : "",date : "",price : "",description : "", organization : ""})
-    
+    const [eventDetails, setEventDetails] = useState({ date: "", time: "", venue: "", date: "", price: "", description: "", organization: "" })
+    const [isLoader, setIsLoader] = useState(false)
 
     const getEventDetails = async () => {
+        setIsLoader(true)
         try {
             const result = await viewEventAPI(idObj.id)
             if (result.status == 200) {
@@ -60,6 +62,7 @@ function EventDetails() {
             });
             navigate('users/events')
         }
+        setIsLoader(false)
     }
 
     useEffect(() => {
@@ -67,53 +70,61 @@ function EventDetails() {
     }, [])
 
     useEffect(() => {
-        setEventDetails({...eventDetails,date : eventData.date,time : eventData.time,venue : eventData.venue,
-            date : eventData.date,price : eventData.price,description : eventData.description,organization : eventData.organization})
-    },[eventData])
+        setEventDetails({
+            ...eventDetails, date: eventData.date, time: eventData.time, venue: eventData.venue,
+            date: eventData.date, price: eventData.price, description: eventData.description, organization: eventData.organization
+        })
+    }, [eventData])
 
     return (
         <div className="bg-slate-950 min-h-screen">
+            {
+                isLoader ? (<Loader />) :
+                    (
+                        <div>
+                            <Banner banner={eventData.bannerImage} name={eventData.eventname} />
 
-            <Banner banner={eventData.bannerImage} name={eventData.eventname} />
+                            <div className="max-w-7xl mx-auto px-6 py-10 grid lg:grid-cols-3 gap-8">
 
-            <div className="max-w-7xl mx-auto px-6 py-10 grid lg:grid-cols-3 gap-8">
+                                <div className="lg:col-span-2 space-y-10">
 
-                <div className="lg:col-span-2 space-y-10">
+                                    <EventInfo eventDetails={eventDetails} />
 
-                    <EventInfo eventDetails={eventDetails} />
+                                    {/* <EventSchedule />
 
-                    {/* <EventSchedule />
+                        <div>
 
-                    <div>
+                            <h2 className="text-3xl font-bold text-white mb-6">
+                                Speakers
+                            </h2>
 
-                        <h2 className="text-3xl font-bold text-white mb-6">
-                            Speakers
-                        </h2>
+                            <div className="grid md:grid-cols-2 gap-6">
 
-                        <div className="grid md:grid-cols-2 gap-6">
+                                {speakers.map((speaker) =>
 
-                            {speakers.map((speaker) =>
+                                    <SpeakerCard
+                                        key={speaker.id}
+                                        speaker={speaker}
+                                    />
 
-                                <SpeakerCard
-                                    key={speaker.id}
-                                    speaker={speaker}
-                                />
+                                )}
 
-                            )}
+                            </div>
 
+                        </div> */}
+
+                                    <VenueMap venue={eventData.venue} />
+
+                                    <ReviewSection data={{ eventname: eventData.eventname, eventId: eventData._id, organizerId: eventData.organizerId }} />
+
+                                </div>
+
+                                <RegistrationBox event={eventData} />
+
+                            </div>
                         </div>
-
-                    </div> */}
-
-                    <VenueMap venue = {eventData.venue} />
-
-                    <ReviewSection data = {{ eventname : eventData.eventname, eventId : eventData._id, organizerId : eventData.organizerId }} />
-
-                </div>
-
-                <RegistrationBox event = {eventData}/>
-
-            </div>
+                    )
+            }
 
         </div>
     )

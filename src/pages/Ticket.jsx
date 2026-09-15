@@ -5,15 +5,18 @@ import TicketCard from "../components/users/TicketCard";
 import TopBar from "../components/users/TopBar";
 import { useEffect, useState } from "react";
 import { getUserTicketsAPI } from "../components/services/allAPIs";
+import Loader from "./Loader";
 
 export default function Ticket() {
     const [data, setData] = useState([]);
     const [userData, setUserData] = useState({});
+    const [isLoader,setIsLoader] = useState(false)
 
     console.log("User ID:", userData?._id);
     console.log("Tickets:", data);
 
     const getTickets = async () => {
+        setIsLoader(true)
         try {
             const result = await getUserTicketsAPI(userData._id);
 
@@ -36,6 +39,7 @@ export default function Ticket() {
                 icon: "error"
             });
         }
+        setIsLoader(false)
     };
 
     // Get logged-in user
@@ -64,8 +68,9 @@ export default function Ticket() {
             <div className="flex-1">
 
                 <TopBar />
-
-                <main className="p-8">
+                {
+                    isLoader ? (<Loader/>) :
+                    (<main className="p-8">
 
                     <div className="min-h-screen bg-slate-950 py-16 px-6">
 
@@ -106,7 +111,8 @@ export default function Ticket() {
 
                     </div>
 
-                </main>
+                </main>)
+                }
 
             </div>
 

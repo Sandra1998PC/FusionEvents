@@ -25,6 +25,7 @@ import axiosInstance from "../services/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { updateOrganizerAPI } from "../services/allAPIs";
 import Swal from "sweetalert2";
+import Loader from "../../pages/Loader";
 
 export default function OrganizerProfile() {
     const [profile, setProfile] = useState({username : "", email : "", phonenumber : "", password : "", role : "", location : "",
@@ -33,6 +34,7 @@ export default function OrganizerProfile() {
     const [confirmPassword, setConfirmPassword] = useState("")
     const [passwordMatchError, setPasswordMatchError] = useState(false)
     const navigate = useNavigate()
+    const [isLoading,setIsLoading] = useState(false)
 
     const handleChange = (e) => {
         setProfile({
@@ -120,7 +122,7 @@ export default function OrganizerProfile() {
         if (profileImage instanceof File) {
             reqBody.append("profileImage", profileImage);
         }
-
+        setIsLoading(true)
         try {
             const result = await updateOrganizerAPI(reqBody);
             console.log("result : ",result);
@@ -150,6 +152,7 @@ export default function OrganizerProfile() {
                 icon: "error"
             });
         }
+        setIsLoading(false)
     };
 
     useEffect(() => {
@@ -169,7 +172,9 @@ export default function OrganizerProfile() {
 
                 <OrganizerHeader />
 
-                <div className="p-8">
+                {
+                    isLoading ? (<Loader/>) :
+                    (<div className="p-8">
 
                     <div className="min-h-screen bg-[#020617] text-white p-8">
 
@@ -482,8 +487,8 @@ export default function OrganizerProfile() {
 
                     </div>
 
-                </div>
-
+                </div>)
+                }
             </main>
 
         </div>

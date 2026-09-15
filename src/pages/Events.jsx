@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { getAllEvents } from "../components/services/allAPIs";
 import axiosInstance from "../components/services/axiosInstance";
+import Loader from "./Loader";
 
 export default function Events() {
     const navigate = useNavigate()
@@ -15,8 +16,10 @@ export default function Events() {
     const [organizer, setOrganizer] = useState("")
     const [location, setLocation] = useState("")
     console.log("displayEvents : ", displayEvents)
+    const [isLoader,setIsLoader] = useState(false)
 
     const getAllEventsToDisplay = async () => {
+        setIsLoader(true)
         try {
             const result = await getAllEvents()
             console.log("event result : ", result)
@@ -37,6 +40,7 @@ export default function Events() {
                 icon: "error"
             });
         }
+        setIsLoader(false)
     }
 
     const onEventChange = (e) => {
@@ -103,7 +107,9 @@ export default function Events() {
 
                 <TopBar />
 
-                <main className="p-8">
+                {
+                    isLoader ? (<Loader/>) :
+                    (<main className="p-8">
 
                     <section className="min-h-screen bg-slate-950 text-white px-6 py-10">
 
@@ -190,7 +196,7 @@ export default function Events() {
                         </div>
 
                         {/* Filters */}
-                        {/* 
+                        {/*
                         <div className="grid lg:grid-cols-6 md:grid-cols-3 gap-4 mb-12">
 
                             <select className="bg-slate-900 border border-slate-700 rounded-xl p-3">
@@ -235,7 +241,7 @@ export default function Events() {
 
                         {/* Event Cards */}
 
-                        <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
+                        {displayEvents.length > 0 ? ( <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
 
                             {displayEvents.map((event) => (
 
@@ -309,11 +315,19 @@ export default function Events() {
 
                             ))}
 
-                        </div>
+                        </div>) : (
+                             <div className="text-center text-slate-400 py-20">
+                                    <p className="text-xl">
+                                        No events are available at the moment.
+                                    </p>
+                                </div>
+                        )}
+
 
                     </section>
 
-                </main>
+                </main>)
+                }
 
             </div>
 

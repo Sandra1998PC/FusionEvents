@@ -6,6 +6,7 @@ import { deleteUserAPI, getAllUsersAPI, updateUserStatusAPI } from "../services/
 import Swal from "sweetalert2";
 import ViewUserModal from "./ViewUserModal";
 import UserApprovalModal from "./UserApprovalModal";
+import Loader from "../../pages/Loader";
 
 const badgeColor = (status) => {
     switch (status) {
@@ -29,6 +30,7 @@ function AdminTables() {
     const [showApprovalModal, setShowApprovalModal] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const usersPerPage = 5;
+    const [loader,setLoader] = useState(false)
 
     const handleViewUser = (user) => {
         setSelectedUser(user);
@@ -41,6 +43,7 @@ function AdminTables() {
     };
 
     const getAllUserData = async () => {
+        setLoader(true)
         try {
             const result = await getAllUsersAPI()
             if (result.status == 200) {
@@ -59,10 +62,11 @@ function AdminTables() {
                 icon: "error"
             });
         }
-
+        setLoader(false)
     }
 
     const handleStatusUpdate = async (userId, status) => {
+        setLoader(true)
         try {
             const result = await updateUserStatusAPI(userId, status);
             if (result.status === 200) {
@@ -84,9 +88,11 @@ function AdminTables() {
                 text: "Unable to update user status."
             });
         }
+        setLoader(false)
     };
 
     const deleteUser = async (userID) => {
+        setLoader(true)
             try{
                 const deleteResult = await deleteUserAPI(userID);
                 console.log("Delete API Result:", deleteResult);
@@ -110,6 +116,7 @@ function AdminTables() {
                     icon: "error"
                 });
             }
+            setLoader(false)
         }
 
     const totalPages = Math.ceil((users.length - 1) / usersPerPage);
@@ -136,8 +143,8 @@ function AdminTables() {
         <div className="flex bg-slate-950 min-h-screen">
 
             <AdminSidebar />
-
-            <main className="flex-1 lg:ml-72">
+            {loader ? (<Loader/>) :
+            (<main className="flex-1 lg:ml-72">
 
                 <AdminHeader />
 
@@ -328,7 +335,7 @@ function AdminTables() {
 
                 </div>
 
-            </main>
+            </main>)}
 
         </div>
     );

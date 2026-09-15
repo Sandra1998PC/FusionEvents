@@ -7,7 +7,8 @@ function Banner({banner,name}) {
         <div
             className="h-[420px] bg-bottom bg-right relative"
             style={{
-               backgroundImage: !banner ? `url(${EventDetails})` : `${axiosInstance.defaults.baseURL}/uploads/${banner}`//,backgroundRepeat: 'no-repeat'
+            //    backgroundImage: !banner ? `url(${EventDetails})` : `${axiosInstance.defaults.baseURL}/uploads/${banner}`//,backgroundRepeat: 'no-repeat'
+            backgroundImage:`url(${EventDetails})`
             }}
         >
 

@@ -4,6 +4,7 @@ import OrganizerSidebar from "../components/organizer/OrganizerSidebar";
 import OrganizerHeader from "../components/organizer/OrganizerHeader";
 import Swal from "sweetalert2";
 import { addEventAPI } from "../components/services/allAPIs";
+import Loader from "./Loader";
 
 export default function CreateEvent() {
     const [banner, setBanner] = useState(null);
@@ -13,6 +14,7 @@ export default function CreateEvent() {
         date: "", time: "", price: 0, seats: 0, bannerImage: "", organizername: "", organizerId: "", organization: ""
     })
     const [preview, setPreview] = useState("")
+    const [isLoader,setIsLoader] = useState(false)
     console.log("event : ", event)
 
     const organizerData = () => {
@@ -119,7 +121,7 @@ export default function CreateEvent() {
         for (let [key, value] of reqBody.entries()) {
             console.log(key, value);
         }
-
+        setIsLoader(true)
         try {
             const result = await addEventAPI(reqBody);
 
@@ -156,14 +158,15 @@ export default function CreateEvent() {
                 icon: "error"
             });
         }
+        setIsLoader(false)
     };
 
     return (
         <div className="flex bg-slate-950 min-h-screen">
 
             <OrganizerSidebar />
-
-            <main className="flex-1 lg:ml-72">
+            {isLoader ? (<Loader/>) :
+            (<main className="flex-1 lg:ml-72">
 
                 <OrganizerHeader />
 
@@ -454,6 +457,7 @@ export default function CreateEvent() {
                 </div>
 
             </main>
+        )}
 
         </div>
 

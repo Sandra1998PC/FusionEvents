@@ -12,6 +12,7 @@ import TopBar from '../components/users/TopBar';
 import Sidebar from '../components/users/Sidebar';
 import Swal from 'sweetalert2';
 import { getUserNotifAPI } from '../components/services/allAPIs';
+import Loader from './Loader';
 
 // const notifications = [
 //     {
@@ -110,10 +111,11 @@ const icons = [
 function UserNotifications() {
     const [notifications, setNotifications] = useState([])
     const [userData, setUserData] = useState({})
+    const [isLoader,setIsLoader] = useState(false)
     console.log(userData._id);
 
     const getNotifs = async () => {
-        debugger
+        setIsLoader(true)
         try {
             const result = await getUserNotifAPI(userData._id)
             console.log(result)
@@ -136,6 +138,7 @@ function UserNotifications() {
                 icon: "error"
             });
         }
+        setIsLoader(false)
     }
     useEffect(() => {
         const data = JSON.parse(sessionStorage.getItem("user"))
@@ -155,8 +158,9 @@ function UserNotifications() {
             <div className="flex-1">
 
                 <TopBar />
-
-                <main className="p-8">
+                {
+                    isLoader ? (<Loader/>) :
+                    ( <main className="p-8">
 
                     <div className="min-h-screen bg-slate-950 px-6 py-10">
                         <div className="max-w-5xl mx-auto">
@@ -238,7 +242,8 @@ function UserNotifications() {
                         </div>
                     </div>
 
-                </main>
+                </main>)
+                }
 
             </div>
 

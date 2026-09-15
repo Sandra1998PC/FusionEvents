@@ -4,11 +4,13 @@ import loginBg from '../assets/loginBg.png'
 import { useState } from "react";
 import { loginAPI } from "../components/services/allAPIs";
 import Swal from "sweetalert2";
+import Loader from "./Loader";
 
 const Login = () => {
   const navigate = useNavigate()
   const [loginData, setLoginData] = useState({ email: "", password: "" })
   const [error, setError] = useState(false);
+  const [isLoader, setIsLoader] = useState(false)
   console.log(loginData);
 
 
@@ -18,6 +20,7 @@ const Login = () => {
       setError(true)
       return
     }
+    setIsLoader(true)
     try {
       const result = await loginAPI(loginData)
       console.log(result)
@@ -62,6 +65,7 @@ const Login = () => {
         });
       }
     }
+    setIsLoader(false)
   }
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -98,154 +102,155 @@ const Login = () => {
 
       <div className="relative w-full max-w-md mx-5 animate-[fadeIn_.8s_ease]">
 
-        <div className="bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(124,58,237,.25)] p-10">
+        {isLoader ? (<Loader></Loader>) :
+          (<div className="bg-white/5 backdrop-blur-2xl rounded-3xl border border-white/10 shadow-[0_0_50px_rgba(124,58,237,.25)] p-10">
 
-          {/* Logo */}
+            {/* Logo */}
 
-          <div className="text-center">
+            <div className="text-center">
 
-            <h1 className="text-4xl font-bold">
+              <h1 className="text-4xl font-bold">
 
-              <span className="text-cyan-400">
-                Fusion
-              </span>
+                <span className="text-cyan-400">
+                  Fusion
+                </span>
 
-              <span className="text-violet-500">
-                Events
-              </span>
+                <span className="text-violet-500">
+                  Events
+                </span>
 
-            </h1>
+              </h1>
 
-            <h2 className="mt-6 text-3xl font-bold text-white">
-              Welcome Back
-            </h2>
+              <h2 className="mt-6 text-3xl font-bold text-white">
+                Welcome Back
+              </h2>
 
-            <p className="text-slate-400 mt-3">
-              Sign in to continue your journey.
-            </p>
-
-          </div>
-
-          {/* Form */}
-
-          <form className="mt-10 space-y-6" onSubmit={login}>
-
-            {/* Email */}
-
-            <div className="relative">
-
-              <Mail
-                className="absolute left-4 top-4 text-cyan-400"
-                size={20}
-              />
-
-              <input
-                type="email"
-                placeholder="Email Address"
-                value={loginData.email}
-                onChange={(e) =>
-                  setLoginData({
-                    ...loginData,
-                    email: e.target.value
-                  })
-                }
-                className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:border-cyan-400 outline-none transition"
-              />
+              <p className="text-slate-400 mt-3">
+                Sign in to continue your journey.
+              </p>
 
             </div>
 
-            {/* Password */}
+            {/* Form */}
 
-            <div className="relative">
+            <form className="mt-10 space-y-6" onSubmit={login}>
 
-              <Lock
-                className="absolute left-4 top-4 text-cyan-400"
-                size={20}
-              />
+              {/* Email */}
 
-              <input
-                type="password"
-                placeholder="Password"
-                value={loginData.password}
-                onChange={(e) =>
-                  setLoginData({
-                    ...loginData,
-                    password: e.target.value
-                  })
-                }
-                className="w-full pl-12 pr-12 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:border-cyan-400 outline-none transition"
-              />
+              <div className="relative">
 
-              <Eye
-                className="absolute right-4 top-4 text-slate-400 cursor-pointer"
-                size={20}
-              />
-
-            </div>
-
-            <div>
-              {error && (
-                <p className="mt-3 text-yellow-600 text-sm text-center">
-                  Password and confirm password must be same
-                </p>
-              )}
-            </div>
-
-            {/* Remember */}
-
-            <div className="flex items-center justify-between">
-
-              <label className="flex items-center gap-2 text-slate-300">
-
-                <input
-                  type="checkbox"
-                  className="accent-cyan-400"
+                <Mail
+                  className="absolute left-4 top-4 text-cyan-400"
+                  size={20}
                 />
 
-                Remember Me
-
-              </label>
-
-              <button
-                type="button"
-                className="text-cyan-400 hover:text-cyan-300 transition"
-              >
-                Forgot Password?
-              </button>
-
-            </div>
-
-            {/* Login */}
-
-            <button className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold flex justify-center
-            items-center gap-2 hover:scale-105 transition duration-300 shadow-[0_0_30px_rgba(34,211,238,.45)]"
-              type="submit">
-
-              Login
-
-              <ArrowRight size={20} />
-
-            </button>
-
-            {/* Divider */}
-
-            <div className="relative text-center">
-
-              <div className="absolute inset-0 flex items-center">
-
-                <div className="w-full border-t border-white/10"></div>
+                <input
+                  type="email"
+                  placeholder="Email Address"
+                  value={loginData.email}
+                  onChange={(e) =>
+                    setLoginData({
+                      ...loginData,
+                      email: e.target.value
+                    })
+                  }
+                  className="w-full pl-12 pr-4 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:border-cyan-400 outline-none transition"
+                />
 
               </div>
 
-              <span className="relative bg-slate-900 px-4 text-slate-400 text-sm">
-                OR
-              </span>
+              {/* Password */}
 
-            </div>
+              <div className="relative">
 
-            {/* Google */}
+                <Lock
+                  className="absolute left-4 top-4 text-cyan-400"
+                  size={20}
+                />
 
-            {/* <button
+                <input
+                  type="password"
+                  placeholder="Password"
+                  value={loginData.password}
+                  onChange={(e) =>
+                    setLoginData({
+                      ...loginData,
+                      password: e.target.value
+                    })
+                  }
+                  className="w-full pl-12 pr-12 py-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:border-cyan-400 outline-none transition"
+                />
+
+                <Eye
+                  className="absolute right-4 top-4 text-slate-400 cursor-pointer"
+                  size={20}
+                />
+
+              </div>
+
+              <div>
+                {error && (
+                  <p className="mt-3 text-yellow-600 text-sm text-center">
+                    Password and confirm password must be same
+                  </p>
+                )}
+              </div>
+
+              {/* Remember */}
+
+              <div className="flex items-center justify-between">
+
+                <label className="flex items-center gap-2 text-slate-300">
+
+                  <input
+                    type="checkbox"
+                    className="accent-cyan-400"
+                  />
+
+                  Remember Me
+
+                </label>
+
+                <button
+                  type="button"
+                  className="text-cyan-400 hover:text-cyan-300 transition"
+                >
+                  Forgot Password?
+                </button>
+
+              </div>
+
+              {/* Login */}
+
+              <button className="w-full py-4 rounded-xl bg-gradient-to-r from-cyan-400 to-violet-600 text-white font-semibold flex justify-center
+            items-center gap-2 hover:scale-105 transition duration-300 shadow-[0_0_30px_rgba(34,211,238,.45)]"
+                type="submit">
+
+                Login
+
+                <ArrowRight size={20} />
+
+              </button>
+
+              {/* Divider */}
+
+              <div className="relative text-center">
+
+                <div className="absolute inset-0 flex items-center">
+
+                  <div className="w-full border-t border-white/10"></div>
+
+                </div>
+
+                <span className="relative bg-slate-900 px-4 text-slate-400 text-sm">
+                  OR
+                </span>
+
+              </div>
+
+              {/* Google */}
+
+              {/* <button
               type="button"
               className="w-full py-4 rounded-xl bg-white text-slate-900 font-semibold hover:bg-slate-100 transition"
             >
@@ -254,24 +259,23 @@ const Login = () => {
 
             </button> */}
 
-          </form>
+            </form>
 
-          {/* Register */}
+            {/* Register */}
 
-          <div className="mt-8 text-center text-slate-400">
+            <div className="mt-8 text-center text-slate-400">
 
-            Don't have an account?
+              Don't have an account?
 
-            <button className="ml-2 text-cyan-400 hover:text-cyan-300 font-semibold" onClick={() => navigate("/register")}>
+              <button className="ml-2 text-cyan-400 hover:text-cyan-300 font-semibold" onClick={() => navigate("/register")}>
 
-              Create Account
+                Create Account
 
-            </button>
+              </button>
 
-          </div>
+            </div>
 
-        </div>
-
+          </div>)}
       </div>
 
     </section>

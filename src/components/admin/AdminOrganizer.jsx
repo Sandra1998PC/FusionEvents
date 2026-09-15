@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import { deleteEventAPI, getAllEvents, updateEventStatusAPI } from '../services/allAPIs';
 import ViewEventModal from './ViewEventModal';
 import AdminEventStatusModal from './AdminEventStatusModal';
+import Loader from '../../pages/Loader';
 
 const badgeColor = (status) => {
     switch (status) {
@@ -51,6 +52,7 @@ function AdminOrganizer() {
     const [showStatusModal, setShowStatusModal] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const eventsPerPage = 5;
+    const [loader,setLoader] = useState(false)
 
     const handleEditEvent = (event) => {
         setSelectedEvent(event);
@@ -62,6 +64,7 @@ function AdminOrganizer() {
         setShowModal(true);
     };
     const allEvents = async () => {
+        setLoader(true)
         try {
             const result = await getAllEvents()
             console.log(result);
@@ -81,9 +84,11 @@ function AdminOrganizer() {
                 icon: "error"
             });
         }
+        setLoader(false)
     }
 
     const handleStatusUpdate = async (eventId, status) => {
+        setLoader(true)
         try {
             console.log("Event ID:", eventId);
             console.log("New Status:", status);
@@ -108,9 +113,11 @@ function AdminOrganizer() {
                 text: "Something went wrong while updating the event."
             });
         }
+        setLoader(false)
     };
 
      const deleteEvent = async (eventID) => {
+        setLoader(true)
             try{
                 const deleteResult = await deleteEventAPI(eventID);
                 console.log("Delete API Result:", deleteResult);
@@ -134,6 +141,7 @@ function AdminOrganizer() {
                     icon: "error"
                 });
             }
+            setLoader(false)
         }
 
     const totalPages = Math.ceil(events.length / eventsPerPage);
@@ -157,8 +165,8 @@ function AdminOrganizer() {
         <div className="flex bg-slate-950 min-h-screen">
 
             <AdminSidebar />
-
-            <main className="flex-1 lg:ml-72">
+            {loader ? (<Loader/>) :
+            (<main className="flex-1 lg:ml-72">
 
                 <AdminHeader />
 
@@ -380,7 +388,7 @@ function AdminOrganizer() {
 
                 </div>
 
-            </main>
+            </main>)}
 
         </div>
     )
