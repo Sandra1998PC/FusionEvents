@@ -11,6 +11,7 @@ import business from '../assets/Business.png'
 import education from '../assets/Education.png'
 import sports from '../assets/Sports.png'
 import technology from '../assets/Technology.png'
+import { useNavigate } from "react-router-dom";
 
 const events = [
     {
@@ -70,6 +71,10 @@ const events = [
 ];
 
 const FeaturedEvents = () => {
+    const navigate = useNavigate()
+    const login = () => {
+        navigate('/login')
+    }
     return (
         <section className="relative py-28 bg-slate-950 overflow-hidden">
 
@@ -173,7 +178,8 @@ const FeaturedEvents = () => {
 
                                 {/* Button */}
 
-                                <button className="mt-8 w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-cyan-400 to-violet-600 flex justify-center items-center gap-2 transition duration-300 hover:scale-105 shadow-[0_0_25px_rgba(34,211,238,0.4)]">
+                                <button className="mt-8 w-full py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-cyan-400 to-violet-600 flex justify-center items-center gap-2 transition duration-300 hover:scale-105 shadow-[0_0_25px_rgba(34,211,238,0.4)]"
+                                onClick={login}>
 
                                     Register
 
