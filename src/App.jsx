@@ -24,6 +24,7 @@ import Profile from './pages/Profile';
 import RegisterEvent from './components/users/RegisterEvent';
 import PaymentSuccess from './components/users/PaymentSuccess';
 import PaymentFailure from './components/users/PaymentFailure';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -53,6 +54,7 @@ function App() {
         <Route path="/admin/:id/profile" element={<AdminProfile />} />
         <Route path="/payment/success" element={<PaymentSuccess />} />
         <Route path="/payment/error" element={<PaymentFailure />} />
+         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
   )
